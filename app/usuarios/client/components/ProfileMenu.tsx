@@ -51,7 +51,7 @@ export default function ProfileMenu() {
     if (typeof window !== "undefined") {
       localStorage.removeItem("token");
       toast.info("Cerrando sesión...");
-      setTimeout(() => (window.location.href = "/login"), 1200);
+      setTimeout(() => (window.location.href = "/usuarios/public/screens/HomePublico"), 1200);
     }
   };
 
