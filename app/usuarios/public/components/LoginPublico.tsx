@@ -62,7 +62,7 @@ export default function LoginPublico() {
 
     try {
       setCargando(true);
-      const res = await axios.post("http://localhost:3000/auth/login", loginData);
+      const res = await axios.post("https://backend-7nyf.onrender.com/auth/login", loginData);
 
       toast.success(res.data.mensaje || "Inicio de sesión exitoso 🎉");
 

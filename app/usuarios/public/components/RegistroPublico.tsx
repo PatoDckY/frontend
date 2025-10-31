@@ -102,7 +102,7 @@ export default function RegistroPublico() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/usuarios/registro", {
+      const response = await fetch("https://backend-7nyf.onrender.com/usuarios/registro", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
