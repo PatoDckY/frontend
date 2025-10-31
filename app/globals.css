@@ -1,26 +1,108 @@
-@import "tailwindcss";
-
+/* ========= VARIABLES GLOBALES ========= */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* 🎨 Colores primarios */
+  --color-azul-marino: #0A3D62;
+  --color-azul-celeste: #74B9FF;
+  --color-blanco: #FFFFFF;
+
+  /* 🎨 Colores secundarios y neutrales */
+  --color-gris-claro: #D9D9D9;
+  --color-gris-oscuro: #4B4B4B;
+  --color-beige-suave: #F5E6CC;
+  --color-crema: #FFF5E1;
+  --color-negro: #000000;
+
+  /* 🎨 Colores de estado */
+  --color-verde-menta: #A8E6CF;
+  --color-verde-esmeralda: #2ECC71;
+  --color-amarillo-vibrante: #F1C40F;
+  --color-naranja-calido: #E67E22;
+  --color-rojo-alerta: #E74C3C;
+
+  /* 🧠 Tipografía */
+  --fuente-principal: 'Open Sans', sans-serif;
+  --fuente-secundaria: 'Lato', sans-serif;
+  --fuente-descriptiva: 'Merriweather', serif;
+
+  /* 🅰️ Tamaños tipográficos */
+  --display: 48px;
+  --h1: 36px;
+  --h2: 28px;
+  --h3: 22px;
+  --h4: 18px;
+  --texto-base: 16px;
+  --texto-auxiliar: 14px;
+  --texto-pequeno: 12px;
+
+  /* ✨ Pesos */
+  --light: 300;
+  --regular: 400;
+  --medium: 500;
+  --semibold: 600;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ========= ESTILOS BASE ========= */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--fuente-principal);
+  background-color: var(--color-crema);
+  color: var(--color-gris-oscuro);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+h1, h2, h3, h4 {
+  color: var(--color-azul-marino);
+  margin-bottom: 0.5rem;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ========= BOTONES ========= */
+.btn-principal {
+  background-color: var(--color-azul-marino);
+  color: var(--color-blanco);
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: var(--semibold);
+  font-size: var(--texto-base);
+  transition: 0.3s;
+}
+
+.btn-principal:hover {
+  background-color: var(--color-azul-celeste);
+}
+
+/* ========= CONTENEDORES ========= */
+.section {
+  padding: 4rem 2rem;
+}
+
+.card {
+  background-color: var(--color-blanco);
+  border: 1px solid var(--color-gris-claro);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  padding: 2rem;
+}
+
+/* ========= UTILIDADES ========= */
+.texto-verde {
+  color: var(--color-verde-esmeralda);
+}
+
+.texto-naranja {
+  color: var(--color-naranja-calido);
+}
+
+.texto-amarillo {
+  color: var(--color-amarillo-vibrante);
 }
