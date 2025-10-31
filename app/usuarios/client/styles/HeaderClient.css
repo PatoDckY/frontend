@@ -86,3 +86,15 @@
     margin-top: 0.5rem;
   }
 }
+
+.header-client {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 30px;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+}

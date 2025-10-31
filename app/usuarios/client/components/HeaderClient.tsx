@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import ProfileMenu from "./ProfileMenu"; // importa el nuevo componente
 import "../styles/HeaderClient.css";
 
 export default function HeaderClient() {
@@ -8,11 +9,10 @@ export default function HeaderClient() {
       {/* Logo */}
       <div className="logo">
         <Link href="/usuarios/client/screens/HomeClient" className="logo-link">
-            <Image src="/logo.png" alt="Logo Centro Medico Pichardo" width={70} height={70} />
-            <span className="logo-text">Centro Medico Pichardo</span>
+          <Image src="/logo.png" alt="Logo Centro Medico Pichardo" width={70} height={70} />
+          <span className="logo-text">Centro Medico Pichardo</span>
         </Link>
-        </div>
-
+      </div>
 
       {/* Navegación */}
       <nav className="nav-publico">
@@ -22,6 +22,11 @@ export default function HeaderClient() {
         <Link href="/noticias">Noticias & Consejos</Link>
         <Link href="/quienes-somos">¿Quiénes Somos?</Link>
       </nav>
+
+      {/* Perfil */}
+      <div className="profile-section">
+        <ProfileMenu />
+      </div>
     </header>
   );
 }

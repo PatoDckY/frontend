@@ -4,7 +4,7 @@ import { Eye, EyeOff } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // <-- Hook de navegación
+import { useRouter } from "next/navigation";
 import "../styles/LoginPublico.css";
 
 type LoginData = {
@@ -15,7 +15,7 @@ type LoginData = {
 type Errores = Partial<Record<keyof LoginData, string>>;
 
 export default function LoginPublico() {
-  const router = useRouter(); // <-- Inicializa router
+  const router = useRouter();
   const [loginData, setLoginData] = useState<LoginData>({
     correo: "",
     contrasena: "",
@@ -25,15 +25,13 @@ export default function LoginPublico() {
   const [cargando, setCargando] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.name as keyof LoginData;
-    const value = e.target.value;
+    const { name, value } = e.target;
     setLoginData({ ...loginData, [name]: value });
-    validarCampo(name, value);
+    validarCampo(name as keyof LoginData, value);
   };
 
   const validarCampo = (name: keyof LoginData, value: string) => {
     let error = "";
-
     switch (name) {
       case "correo":
         if (!value) error = "El correo es obligatorio";
@@ -44,7 +42,6 @@ export default function LoginPublico() {
         if (!value) error = "Ingrese su contraseña";
         break;
     }
-
     setErrores((prev) => ({ ...prev, [name]: error }));
   };
 
@@ -62,11 +59,23 @@ export default function LoginPublico() {
 
     try {
       setCargando(true);
-      const res = await axios.post("https://backend-7nyf.onrender.com/auth/login", loginData);
+      const res = await axios.post(
+        "https://backend-7nyf.onrender.com/auth/login",
+        loginData
+      );
+
+      const token = res.data.token;
+      if (!token) {
+        toast.error("No se recibió token del servidor");
+        return;
+      }
+
+      // Guardamos el token JWT
+      localStorage.setItem("token", token);
 
       toast.success(res.data.mensaje || "Inicio de sesión exitoso 🎉");
 
-      // Redirige a la pantalla del cliente después de 1 segundo
+      // Redirige al home del cliente
       setTimeout(() => {
         router.push("/usuarios/client/screens/HomeClient");
       }, 1000);
@@ -126,7 +135,9 @@ export default function LoginPublico() {
               {mostrarContrasena ? <EyeOff size={18} /> : <Eye size={18} />}
             </span>
           </div>
-          {errores.contrasena && <p className="error">{errores.contrasena}</p>}
+          {errores.contrasena && (
+            <p className="error">{errores.contrasena}</p>
+          )}
         </div>
 
         <button type="submit" className="btn-submit" disabled={cargando}>
