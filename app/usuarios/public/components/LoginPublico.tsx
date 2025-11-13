@@ -146,7 +146,7 @@ export default function LoginPublico() {
 
         <p className="registro-link">
           ¿No tienes cuenta?{" "}
-          <Link href="/registro" className="link">
+          <Link href="/usuarios/public/screens/Registro" className="link">
             Regístrate
           </Link>
         </p>
