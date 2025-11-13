@@ -61,7 +61,15 @@ export default function RegistroPublico() {
         if (!value.trim()) error = "Este campo es obligatorio";
         break;
       case "edad":
-        if (!value || Number(value) < 0) error = "Ingrese una edad válida";
+        if (!value) {
+          error = "La edad es obligatoria";
+        } else if (isNaN(Number(value))) {
+          error = "La edad debe ser un número";
+        } else if (Number(value) < 18) {
+          error = "Debes ser mayor de 18 años para registrarte";
+        } else if (Number(value) > 100) {
+          error = "La edad no puede superar los 100 años";
+        }
         break;
       case "sexo":
         if (!value) error = "Seleccione un sexo";
