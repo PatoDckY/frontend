@@ -1,7 +1,7 @@
 // components/SeccionServicios.tsx
 import React from 'react';
-import ServicioCard from './ServicioCard'; // Tarjeta Vertical
-import ServicioCardHorizontal from './ServicioCardHorizontal'; // Tarjeta Horizontal
+import ServicioCard from './cards/ServicioCard'; // Tarjeta Vertical
+import ServicioCardHorizontal from './cards/ServicioCardHorizontal'; // Tarjeta Horizontal
 import '../styles/SeccionServicios.css'; 
 // La imagen es única para todos
 const IMAGEN_PEDIATRICA = "/pediatric-illustration.png";

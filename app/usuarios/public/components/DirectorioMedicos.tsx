@@ -2,7 +2,7 @@
 "use client";
 import React, { useState } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
-import MedicoCard from './MedicoCard'; // Importamos la tarjeta de médico
+import MedicoCard from './cards/MedicoCard'; // Importamos la tarjeta de médico
 import '../styles/DirectorioMedicos.css';
 
 // --- DATOS DE EJEMPLO ---

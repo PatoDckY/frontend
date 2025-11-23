@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { Stethoscope, BookOpen, UserPlus, MapPin, ArrowRight } from 'lucide-react';
 
 // Importamos componentes de las secciones que ya diseñamos
-import MedicoCard from '../components/MedicoCard'; 
-import NoticiaBreveCard from '../components/NoticiaBreveCard'; 
-import ServicioCard from '../components/ServicioCard'; 
-import CursoCard from '../components/CursoCard'; // <--- NUEVO IMPORT
+import MedicoCard from './cards/MedicoCard'; 
+import NoticiaBreveCard from './cards/NoticiaBreveCard'; 
+import ServicioCard from './cards/ServicioCard'; 
+import CursoCard from './cards/CursoCard'; // <--- NUEVO IMPORT
 
 import '../styles/HomePublico.css'; 
 

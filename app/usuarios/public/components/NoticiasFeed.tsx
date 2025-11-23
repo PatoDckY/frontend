@@ -1,7 +1,7 @@
 // components/NoticiasFeed.tsx - Diseño Mejorado
 import React from 'react';
-import NoticiaBreveCard from './NoticiaBreveCard'; 
-import BlogSidebarPediatria from './BlogSidebarPediatria'; 
+import NoticiaBreveCard from './cards/NoticiaBreveCard'; 
+import BlogSidebarPediatria from './SideBars/BlogSidebarPediatria'; 
 import '../styles/NoticiasFeed.css'; 
 
 // Datos de Noticias Pediátricas (Primer artículo destacado)

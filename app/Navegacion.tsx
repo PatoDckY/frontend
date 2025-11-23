@@ -4,10 +4,10 @@ import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 // Importamos TODOS los componentes de navegación
-import HeaderPublico from "../app/usuarios/public/components/HeaderPublico"; // Tu header público existente
-import HeaderClient from "../app/usuarios/client/components/HeaderClient";
-import FooterPublico from "../app/usuarios/public/components/FooterPublico"; // Tu footer público existente
-import FooterClient from "../app/usuarios/client/components/FooterClient";   // El nuevo footer cliente
+import HeaderPublico from "../app/usuarios/public/components/header/HeaderPublico"; // Tu header público existente
+import HeaderClient from "../app/usuarios/client/components/header/HeaderClient";
+import FooterPublico from "../app/usuarios/public/components/footer/FooterPublico"; // Tu footer público existente
+import FooterClient from "../app/usuarios/client/components/footer/FooterClient";   // El nuevo footer cliente
 
 export default function Navegacion({ children }: { children: React.ReactNode }) {
   const [estaLogueado, setEstaLogueado] = useState(false);

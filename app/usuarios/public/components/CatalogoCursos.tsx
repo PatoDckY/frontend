@@ -2,7 +2,7 @@
 "use client";
 import React, { useState, useMemo } from 'react';
 import { Search, Filter, BookOpen } from 'lucide-react';
-import CursoCard from '../components/CursoCard'; 
+import CursoCard from './cards/CursoCard'; 
 import '../styles/CatalogoCursos.css';
 
 // --- TIPOS DE DATOS (CORREGIDO) ---

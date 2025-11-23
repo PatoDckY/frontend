@@ -1,8 +1,8 @@
 // pages/AcademiaInfantil.tsx
 "use client";
 import React from 'react';
-import NoticiaBreveCard from '../components/NoticiaBreveCard'; 
-import BlogSidebarPediatria from '../components/BlogSidebarPediatria'; 
+import NoticiaBreveCard from './cards/NoticiaBreveCard'; 
+import BlogSidebarPediatria from '../components/SideBars/BlogSidebarPediatria'; 
 import { ArrowRightCircle, BookOpen } from 'lucide-react';
 import '../styles/AcademiaInfantil.css'; 
 
