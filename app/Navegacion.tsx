@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
-// Importamos TODOS los componentes de navegación
-import HeaderPublico from "../app/usuarios/public/components/header/HeaderPublico"; // Tu header público existente
+// Importamos TODOS los componentes de navegación (Manteniendo tus rutas)
+import HeaderPublico from "../app/usuarios/public/components/header/HeaderPublico"; 
 import HeaderClient from "../app/usuarios/client/components/header/HeaderClient";
-import FooterPublico from "../app/usuarios/public/components/footer/FooterPublico"; // Tu footer público existente
-import FooterClient from "../app/usuarios/client/components/footer/FooterClient";   // El nuevo footer cliente
+import FooterPublico from "../app/usuarios/public/components/footer/FooterPublico"; 
+import FooterClient from "../app/usuarios/client/components/footer/FooterClient"; 
 
 export default function Navegacion({ children }: { children: React.ReactNode }) {
   const [estaLogueado, setEstaLogueado] = useState(false);
@@ -15,24 +15,37 @@ export default function Navegacion({ children }: { children: React.ReactNode }) 
   const pathname = usePathname();
 
   useEffect(() => {
-    // Función para verificar el token
+    // Función para verificar el token (MEJORADA)
     const verificarSesion = () => {
       const token = localStorage.getItem("token");
-      setEstaLogueado(!!token); // true si hay token, false si no
+      
+      // VALIDACIÓN ESTRICTA:
+      // 1. Si no hay token
+      // 2. Si el token es el texto "undefined" (error común)
+      // 3. Si el token es el texto "null" (error común)
+      if (!token || token === "undefined" || token === "null") {
+        setEstaLogueado(false);
+        // Limpieza preventiva: si hay basura, la borramos
+        if (token) localStorage.removeItem("token"); 
+      } else {
+        // Solo si pasa las pruebas, lo consideramos logueado
+        setEstaLogueado(true);
+      }
+      
       setCargando(false);
     };
 
     verificarSesion();
     
-    // Escuchar cambios en localStorage (por si se cierra sesión en otra pestaña/componente)
+    // Escuchar cambios en localStorage
     window.addEventListener('storage', verificarSesion);
     
     return () => {
         window.removeEventListener('storage', verificarSesion);
     };
-  }, [pathname]); // Re-verificar cada vez que cambiamos de ruta
+  }, [pathname]); 
 
-  // Evitar parpadeo de contenido incorrecto mientras carga
+  // Evitar parpadeo
   if (cargando) {
     return <div style={{minHeight: '100vh', background: '#F4F7F6'}}></div>; 
   }
@@ -42,7 +55,7 @@ export default function Navegacion({ children }: { children: React.ReactNode }) 
       {/* 1. Header Condicional */}
       {estaLogueado ? <HeaderClient /> : <HeaderPublico />}
       
-      {/* 2. Contenido de la Página (El "Main") */}
+      {/* 2. Contenido de la Página */}
       <main>
         {children}
       </main>
