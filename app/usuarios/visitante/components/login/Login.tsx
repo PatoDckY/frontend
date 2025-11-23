@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
 import axios from "axios"; // Importamos Axios
 import { toast } from "react-toastify"; // Importamos Toastify
-import "../../styles/login/LoginPub.css"; // Asegúrate de que este archivo tenga el CSS del diseño de dos columnas
+import "../../styles/login/LoginPub.css"; 
 
 // Definiciones de Tipos
 type LoginData = {

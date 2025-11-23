@@ -4,8 +4,6 @@ import { Toaster } from "react-hot-toast";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// IMPORTA TU COMPONENTE MAESTRO DE NAVEGACIÓN
-// (Asegúrate de que la ruta sea correcta según donde guardaste el archivo)
 import Navegacion from "./Navegacion"; 
 
 const openSans = Open_Sans({ subsets: ["latin"], weight: ["300", "400", "500", "600"] });
