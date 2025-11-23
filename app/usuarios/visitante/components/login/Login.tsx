@@ -38,7 +38,6 @@ export default function LoginPublico() {
     }
   };
 
-  // Validación básica antes de enviar
   const validarFormulario = () => {
     const nuevosErrores: Errores = {};
     if (!loginData.correo) nuevosErrores.correo = "El correo es obligatorio";
