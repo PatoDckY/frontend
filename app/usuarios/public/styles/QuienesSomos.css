@@ -1,0 +1,177 @@
+/* styles/QuienesSomos.css */
+
+:root {
+  --color-principal: #0A3D62; /* Azul Marino */
+  --color-acento: #FFC300; /* Amarillo Vibrante */
+  --color-texto-oscuro: #1F2937;
+  --color-texto-gris: #4B5563;
+  --color-fondo-claro: #F9FAFB;
+  --color-blanco: #FFFFFF;
+}
+
+.quienes-somos-container {
+  width: 100%;
+  font-family: Arial, sans-serif;
+  padding-bottom: 5rem;
+  background-color: var(--color-blanco);
+}
+
+/* --- SECCIÓN HERO Y TÍTULO --- */
+.quienes-somos-header {
+  background-color: var(--color-fondo-claro);
+  padding: 4rem 20px 2rem 20px;
+  text-align: center;
+}
+
+.header-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.main-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--color-principal);
+  margin-bottom: 1rem;
+}
+
+.highlight-text {
+  color: var(--color-acento);
+}
+
+.intro-text {
+  font-size: 1.3rem;
+  color: var(--color-texto-gris);
+  font-weight: 300;
+}
+
+/* --- SECCIÓN DE COMPROMISO (Misión, Visión, Valores) --- */
+.compromiso-mvv {
+  max-width: 1200px;
+  margin: 3rem auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.compromiso-card {
+  background-color: var(--color-blanco);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border-top: 5px solid var(--color-principal);
+}
+
+.mvv-icon {
+  margin-bottom: 1rem;
+  color: var(--color-principal);
+}
+
+.vision-icon { color: var(--color-acento); } /* Usar acento para contraste */
+.values-icon { color: var(--color-principal); }
+
+.mvv-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-texto-oscuro);
+  margin-bottom: 0.75rem;
+}
+
+.mvv-description {
+  font-size: 1rem;
+  color: var(--color-texto-gris);
+  line-height: 1.5;
+}
+
+.values-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.values-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: var(--color-texto-gris);
+}
+
+.values-list li svg {
+  color: var(--color-acento);
+}
+
+/* --- SECCIÓN DE HISTORIA Y COMPROMISO (Dos Columnas) --- */
+.historia-y-compromiso {
+  max-width: 1200px;
+  margin: 4rem auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+
+.historia-content {
+  flex: 1;
+}
+
+.content-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-principal);
+  margin-bottom: 1.5rem;
+}
+
+.historia-content p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--color-texto-gris);
+  margin-bottom: 1.25rem;
+}
+
+.historia-content p strong {
+  color: var(--color-principal);
+}
+
+.historia-image-wrapper {
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.historia-image {
+  width: 450px;
+  height: auto;
+  display: block;
+}
+
+/* --- Media Queries --- */
+@media (max-width: 1024px) {
+    .historia-y-compromiso {
+        flex-direction: column;
+        text-align: center;
+    }
+    .historia-image-wrapper {
+        max-width: 100%;
+    }
+    .historia-image {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .main-title {
+        font-size: 2.2rem;
+    }
+    .intro-text {
+        font-size: 1rem;
+    }
+    .compromiso-card {
+        padding: 1.5rem;
+    }
+}

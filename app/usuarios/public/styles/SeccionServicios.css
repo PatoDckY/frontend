@@ -1,0 +1,97 @@
+/* styles/SeccionServicios.css */
+
+:root {
+  --color-negro-texto: #1F2937;
+  --color-azul-boton: #0A3D62;
+  --color-hover-azul: #052640;
+  --color-blanco: #FFFFFF;
+  --color-fondo-limpio: #F7F9FC;
+}
+
+.seccion-servicios-container {
+  width: 100%;
+  max-width: 1280px; 
+  margin: 6rem auto; 
+  padding: 0 40px;
+  background-color: var(--color-fondo-limpio); 
+}
+
+.servicios-titulo {
+  font-size: 2.8rem; 
+  font-weight: 800;
+  color: var(--color-negro-texto);
+  text-align: center;
+  margin-bottom: 4rem; 
+}
+
+/* --- ESTILOS DE CUADRÍCULA GENERAL --- */
+.servicios-grid {
+  display: grid;
+  gap: 24px; 
+  justify-content: center;
+  margin-bottom: 30px; /* Espacio entre las dos secciones de tarjetas */
+}
+
+/* --- 1. Cuadrícula de Tarjetas VERTICALES (4 en fila) --- */
+.vertical-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* --- 2. Cuadrícula de Tarjetas HORIZONTALES (2 en fila) --- */
+.horizontal-grid {
+  /* Usamos minmax para asegurar que las tarjetas horizontales tengan suficiente espacio */
+  grid-template-columns: repeat(2, minmax(400px, 1fr));
+}
+
+
+.servicios-footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding-bottom: 4rem;
+}
+
+.btn-ver-todos {
+  padding: 1rem 3rem;
+  background-color: var(--color-azul-boton);
+  color: var(--color-blanco);
+  border: none;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-ver-todos:hover {
+  background-color: var(--color-hover-azul);
+}
+
+/* --- Media Queries --- */
+
+@media (max-width: 1280px) {
+  /* En pantallas grandes, vertical pasa a 3 columnas y horizontal se mantiene en 2 */
+  .vertical-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  /* En tabletas, ambas cuadrículas pasan a 2 columnas */
+  .vertical-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .horizontal-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  /* En móviles, ambas cuadrículas pasan a 1 columna */
+  .servicios-titulo {
+    font-size: 2rem;
+  }
+  .servicios-grid {
+    grid-template-columns: 1fr;
+  }
+}

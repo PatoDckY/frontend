@@ -1,0 +1,73 @@
+/* styles/NoticiasFeed.css - Diseño Mejorado */
+:root {
+  /* ... tus variables de color ... */
+  --color-blanco: #FFFFFF;
+  --color-fondo-limpio: #FFFFFF; /* CAMBIAMOS EL FONDO A BLANCO PURO */
+}
+.noticias-feed-layout {
+    display: flex;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 4rem auto;
+    padding: 0 20px;
+    gap: 40px; /* Aumentamos el espacio entre contenido y sidebar */
+}
+
+/* --- Título Principal --- */
+.blog-category-main-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--color-azul-marino); /* Asumo el color principal de tus componentes */
+    margin: 0 0 2.5rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-gris-borde);
+}
+
+/* --- Área de Contenido de Noticias --- */
+.noticias-content-area {
+    flex-grow: 1;
+    max-width: 800px; /* Darle más ancho al contenido principal */
+}
+
+/* El wrapper que contiene todas las tarjetas */
+.noticias-grid-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* Espacio entre la destacada y las otras noticias */
+}
+
+/* Estilo para la lista de noticias (si hay más de una) */
+.otras-noticias-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* --- Área de la Barra Lateral --- */
+.noticias-sidebar-area {
+    width: 300px; 
+    flex-shrink: 0;
+}
+
+/* --- Media Query para móvil/tablet --- */
+@media (max-width: 992px) {
+    .noticias-feed-layout {
+        flex-direction: column; 
+        gap: 40px;
+    }
+    
+    .noticias-sidebar-area {
+        width: 100%; 
+        max-width: none;
+        order: -1; /* Sidebar arriba */
+    }
+
+    .noticias-content-area {
+        max-width: none;
+    }
+    
+    .blog-category-main-title {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+}

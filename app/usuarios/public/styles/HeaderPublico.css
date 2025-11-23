@@ -1,88 +1,268 @@
-.header-publico {
+/* styles/HeaderPublico.css */
+
+:root {
+  --h-azul-principal: #0A3D62;
+  --h-azul-hover: #062a45;
+  --h-amarillo: #FFC300;
+  --h-amarillo-hover: #e0ac00;
+  --h-blanco: #FFFFFF;
+  --h-gris-claro: #F3F4F6;
+  --h-texto: #374151;
+}
+
+/* --- 1. TOP BAR --- */
+.top-bar {
+  background-color: var(--h-azul-principal);
+  color: var(--h-blanco);
+  font-size: 0.8rem;
+  padding: 0.5rem 0;
+}
+
+.top-bar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 3rem;
-  background-color: var(--color-azul-marino);
-  color: var(--color-blanco);
-  flex-wrap: wrap;
 }
 
-.logo-link {
+.contact-info {
+  display: flex;
+  gap: 20px;
+}
+
+.info-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: var(--color-blanco);
+  gap: 5px;
+  opacity: 0.9;
+}
+
+.top-bar-links {
+  display: flex;
+  gap: 15px;
+}
+
+.top-bar-links a {
+  color: var(--h-blanco);
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.top-bar-links a:hover { opacity: 1; text-decoration: underline; }
+
+/* --- 2. HEADER PRINCIPAL --- */
+.header-publico {
+  background-color: var(--h-blanco);
+  border-bottom: 1px solid #E5E7EB;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.header-publico.scrolled {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding-top: 0;
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.8rem 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Logo Area */
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   text-decoration: none;
 }
 
-.logo-text {
-  font-weight: var(--semibold);
-  font-size: var(--h3);
+.logo-img {
+  border-radius: 50%; /* Opcional, si el logo es circular */
 }
 
-.nav-publico {
+.logo-text-wrapper {
   display: flex;
-  gap: 2rem;
-  align-items: center;
-  font-weight: var(--medium);
-  font-size: var(--texto-base);
+  flex-direction: column;
+  line-height: 1.1;
 }
 
-.nav-publico a {
-  color: var(--color-blanco);
+.logo-title {
+  font-size: 0.9rem;
+  color: var(--h-texto);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.logo-subtitle {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--h-azul-principal);
+}
+
+/* Navegación Desktop */
+.nav-desktop {
+  display: flex;
+  gap: 25px;
+}
+
+.nav-link {
+  color: var(--h-texto);
   text-decoration: none;
-  transition: color 0.3s;
+  font-weight: 600;
+  font-size: 0.95rem;
+  position: relative;
+  transition: color 0.2s;
 }
 
-.nav-publico a:hover {
-  color: var(--color-azul-celeste);
+.nav-link:hover {
+  color: var(--h-azul-principal);
 }
 
-.header-buttons {
+/* Efecto de subrayado en hover */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: var(--h-amarillo);
+  transition: width 0.3s;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Botones de Acción */
+.auth-buttons {
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  gap: 12px;
 }
 
 .btn-login {
-  background-color: var(--color-amarillo-vibrante);
-  color: var(--color-azul-marino);
+  color: var(--h-azul-principal);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
   padding: 0.5rem 1rem;
+  border: 2px solid transparent;
   border-radius: 6px;
-  font-weight: var(--semibold);
-  transition: background 0.3s, color 0.3s;
+  transition: all 0.2s;
 }
 
 .btn-login:hover {
-  background-color: var(--color-naranja-calido);
-  color: var(--color-blanco);
+  background-color: #F3F4F6;
 }
 
 .btn-registro {
-  background-color: var(--color-verde-esmeralda);
-  color: var(--color-blanco);
-  padding: 0.5rem 1rem;
+  background-color: var(--h-amarillo);
+  color: var(--h-azul-principal);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 6px;
-  font-weight: var(--semibold);
-  transition: background 0.3s;
+  transition: all 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .btn-registro:hover {
-  background-color: var(--color-verde-menta);
-  color: var(--color-azul-marino);
+  background-color: var(--h-amarillo-hover);
+  transform: translateY(-1px);
 }
 
-@media (max-width: 1024px) {
-  .nav-publico {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1.5rem;
-    margin: 1rem 0;
-  }
+/* Menú Toggle (Mobile) */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--h-azul-principal);
+  cursor: pointer;
+}
 
-  .header-buttons {
-    flex-wrap: wrap;
+/* --- 3. MENÚ MÓVIL (Drawer) --- */
+.mobile-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: var(--h-blanco);
+  border-top: 1px solid #E5E7EB;
+  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-in-out;
+}
+
+.mobile-menu.open {
+  max-height: 500px; /* Altura suficiente para el contenido */
+}
+
+.nav-mobile {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  gap: 15px;
+}
+
+.nav-mobile a {
+  color: var(--h-texto);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 10px 0;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.mobile-auth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-login.mobile, .btn-registro.mobile {
+  text-align: center;
+  width: 100%;
+  display: block;
+}
+
+.btn-login.mobile {
+  border: 1px solid var(--h-azul-principal);
+}
+
+/* --- MEDIA QUERIES --- */
+@media (max-width: 992px) {
+  .nav-desktop, .desktop-only {
+    display: none;
+  }
+  
+  .menu-toggle {
+    display: block;
+  }
+}
+
+@media (max-width: 600px) {
+  .hidden-mobile {
+    display: none;
+  }
+  
+  .top-bar-container {
     justify-content: center;
-    margin-top: 0.5rem;
+  }
+  
+  .top-bar-links {
+    display: none; /* Ocultar enlaces secundarios en móvil para ahorrar espacio */
   }
 }

@@ -1,10 +1,9 @@
-import PublicLayout from "../../layout/PublicLayout";
-import RegistroPublico from "../../components/RegistroPublico";
+import RegistroPublico from "../../components/registro";
 
 export default function Registro() {
   return (
-    <PublicLayout>
+    <>
       <RegistroPublico />
-    </PublicLayout>
+    </>
   );
 }

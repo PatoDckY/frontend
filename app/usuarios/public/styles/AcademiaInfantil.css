@@ -1,0 +1,134 @@
+/* styles/AcademiaInfantil.css - Ajuste del Hero Banner */
+
+:root {
+  --color-principal: #0A3D62; /* Azul Marino */
+  --color-acento: #FFC300; /* Amarillo Vibrante */
+  --color-texto-claro: #F0F0F0;
+  --color-blanco: #FFFFFF;
+  --color-gris-borde: #E5E7EB;
+}
+
+.academia-page-container {
+  width: 100%;
+  font-family: Arial, sans-serif;
+  background-color: var(--color-blanco);
+}
+
+/* --- SECCIÓN HERO (Banner Superior) --- */
+.academia-hero-banner {
+  background: linear-gradient(135deg, var(--color-principal) 60%, var(--color-acento) 150%);
+  color: var(--color-blanco);
+  padding: 5rem 20px 4rem 20px; /* Más padding vertical */
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 900px;
+  margin-bottom: 2rem;
+}
+
+.hero-title {
+  /* TÍTULO PRINCIPAL: Letra grande y llamativa */
+  font-size: 3rem; 
+  font-weight: 800;
+  color: var(--color-blanco);
+  margin: 0 0 1rem 0;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  /* SUBTÍTULO/MENSAJE: Un poco más grande para el mensaje detallado */
+  font-size: 1.35rem; 
+  font-weight: 300;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* --- BOTÓN DE LLAMADA A LA ACCIÓN (CTA) --- */
+.academia-cta-wrapper {
+  margin-top: 2rem;
+}
+
+.btn-cursos-disponibles {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 1rem 2rem;
+  background-color: var(--color-acento); 
+  color: var(--color-principal); 
+  border-radius: 10px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.2s, transform 0.2s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cursos-disponibles:hover {
+  background-color: #FFB300; 
+  transform: translateY(-2px); 
+}
+
+/* --- LAYOUT DE CONTENIDO Y SIDEBAR (Resto del CSS sin cambios) --- */
+.academia-layout-grid {
+    display: flex;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 4rem auto;
+    padding: 0 20px;
+    gap: 40px; 
+}
+/* ... (el resto del CSS de .content-section-title, .publicaciones-list, .academia-sidebar-area y Media Queries sin cambios) ... */
+.content-section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-principal);
+  margin: 0 0 1.5rem 0;
+}
+
+.academia-content-area {
+  flex-grow: 1;
+  max-width: 750px; 
+}
+
+.publicaciones-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Espacio entre las tarjetas de noticias */
+}
+
+.academia-sidebar-area {
+  width: 300px; 
+  flex-shrink: 0;
+}
+
+/* --- Media Queries --- */
+@media (max-width: 992px) {
+    .academia-layout-grid {
+        flex-direction: column; 
+        gap: 40px;
+    }
+    
+    .academia-sidebar-area {
+        width: 100%; 
+        order: -1; /* Sidebar arriba en móvil */
+    }
+
+    .academia-hero-banner {
+      padding: 3rem 20px;
+    }
+
+    .hero-title {
+      font-size: 2rem;
+    }
+
+    .btn-cursos-disponibles {
+      font-size: 1rem;
+      padding: 0.8rem 1.5rem;
+    }
+}

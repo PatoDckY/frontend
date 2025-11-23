@@ -1,0 +1,351 @@
+/* --- Variables de Color (Azul/Amarillo) --- */
+:root {
+    --color-blanco: #FFFFFF;
+    --color-azul-marino: #0A3D62; /* Dark Blue - Color principal de marca */
+    --color-azul-claro: #74B9FF; /* Light Blue - Acento secundario */
+    --color-amarillo-vibrante: #FFC300; /* Vibrant Yellow - Botón principal */
+    --color-naranja-calido: #FF8800; /* Warm Orange - Hover y enlaces */
+    
+    /* Colores neutrales y de estado */
+    --color-gris-texto: #6B7280;
+    --color-gris-borde: #E5E7EB;
+    --color-error: #E74C3C;
+    --color-success: #2ECC71;
+    --texto-base: 1rem;
+    --texto-chico: 0.875rem;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #F4F7F6; 
+}
+
+/* --- CONTENEDOR PRINCIPAL: Layout de Pantalla Completa --- */
+.registro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px 0;
+}
+
+/* --- CONTENIDO PRINCIPAL: Contenedor del Layout de Dos Columnas --- */
+.registro-content {
+    display: flex;
+    width: 90%;
+    max-width: 1100px; 
+    min-height: 700px; 
+    background-color: var(--color-blanco);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- 1. SECCIÓN DE ILUSTRACIÓN/MARKETING (Izquierda) --- */
+.marketing-section {
+    background-color: var(--color-azul-marino); 
+    color: var(--color-blanco);
+    padding: 3rem;
+    width: 40%;
+    position: relative;
+    overflow: hidden;
+    /* Usamos Flexbox para centrar todo */
+    display: flex; 
+    flex-direction: column;
+    justify-content: center; /* Centrado vertical principal */
+    align-items: center; 
+    text-align: center; 
+    gap: 2rem; /* Espacio entre el texto y la imagen */
+}
+
+/* *CAMBIO*: Eliminamos el estilo del logo box ya que fue quitado */
+.logo-box {
+    display: none;
+}
+
+.marketing-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -50px; 
+    bottom: 0;
+    width: 100px; 
+    background-color: var(--color-blanco);
+    transform: skewX(-5deg); 
+    z-index: 1;
+}
+
+/* *CAMBIO*: Tamaño de fuente aumentado a 2rem */
+.marketing-tagline {
+    font-size: 2rem; 
+    font-weight: 500;
+    line-height: 1.5;
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: var(--color-blanco);
+}
+
+.marketing-tagline strong {
+    font-weight: 700;
+    color: var(--color-azul-claro); 
+}
+
+/* Contenedor de la ilustración */
+.illustration-wrapper {
+    position: relative; 
+    z-index: 3;
+    /* *CAMBIO*: Aseguramos que sea circular */
+    border-radius: 50%; 
+    overflow: hidden;
+    width: 350px; 
+    height: 350px; 
+    
+    /* Centrado en el flujo Flexbox */
+    margin: 0; 
+    
+    /* Sombra para efecto 3D/salida */
+    box-shadow: 0 15px 15px rgba(0, 0, 0, 0.4); 
+}
+
+.illustration-register { 
+    /* *CAMBIO*: La imagen ocupa todo el contenedor circular */
+    width: 100%; 
+    height: 100%;
+    object-fit: cover; /* Recortar la imagen para que llene el círculo */
+    
+    /* Quitamos el filtro/transformación de la imagen ya que la sombra va en el wrapper */
+    filter: none;
+    transform: none;
+    transition: none;
+}
+
+
+/* --- 2. CARD DEL FORMULARIO DE REGISTRO (Derecha) --- */
+.registro-card {
+    background: var(--color-blanco);
+    padding: 3rem 4rem;
+    width: 60%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+}
+
+.title-form {
+    color: var(--color-azul-marino);
+    font-size: 1.8rem;
+    margin-bottom: 2rem; 
+    font-weight: 700;
+    text-align: center;
+}
+
+/* Botones Sociales */
+.social-login {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btn-social {
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: var(--texto-base);
+    background-color: var(--color-blanco);
+    border: 1px solid var(--color-gris-borde);
+    color: var(--color-azul-marino); 
+}
+
+.btn-social:hover {
+    background-color: #F8F8F8;
+}
+
+.icon-social {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
+
+.separator-or {
+    text-align: center;
+    color: var(--color-gris-texto);
+    margin: 1rem 0 1.5rem 0;
+    font-size: var(--texto-chico);
+    position: relative;
+}
+
+.separator-or::before,
+.separator-or::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background-color: var(--color-gris-borde);
+}
+
+.separator-or::before {
+    left: 0;
+}
+
+.separator-or::after {
+    right: 0;
+}
+
+/* --- FORMULARIO Y CAMPOS ESPECÍFICOS DE REGISTRO --- */
+
+.registro-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; 
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem; 
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.form-row .form-group.half {
+    flex: 1; 
+    margin-bottom: 0;
+}
+
+.form-group label {
+    display: none; 
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-gris-borde);
+    font-size: var(--texto-base);
+    outline: none;
+    transition: border-color 0.2s;
+    color: var(--color-azul-marino);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--color-azul-claro);
+}
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.icon-eye {
+    position: absolute;
+    right: 1.25rem;
+    cursor: pointer;
+    color: var(--color-gris-texto);
+}
+
+/* Estados de validación */
+.input-success {
+    border-color: var(--color-success);
+}
+
+.error {
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+    color: var(--color-error);
+    font-weight: 500;
+}
+
+/* --- Botón Principal --- */
+.btn-submit {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--color-amarillo-vibrante);
+    color: var(--color-azul-marino);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 1rem;
+}
+
+.btn-submit:hover {
+    background-color: var(--color-naranja-calido); 
+    color: var(--color-blanco);
+}
+
+/* --- Enlace a Login --- */
+.login-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: var(--texto-chico);
+    color: var(--color-azul-marino);
+}
+
+.login-link .link {
+    color: var(--color-naranja-calido);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.login-link .link:hover {
+    text-decoration: underline;
+    color: var(--color-amarillo-vibrante);
+}
+
+/* --- Media Queries (Responsividad) --- */
+@media (max-width: 992px) {
+    .registro-content {
+        flex-direction: column;
+        min-height: auto;
+        width: 90%;
+    }
+
+    .marketing-section {
+        width: 100%;
+        min-height: 200px;
+        padding: 2rem;
+        align-items: center; 
+        gap: 1rem; /* Reducir espacio en móvil */
+    }
+    
+    .marketing-section::after {
+        display: none; 
+    }
+    
+    .marketing-tagline {
+        font-size: 1.5rem; /* Ajuste para móvil */
+    }
+
+    .illustration-wrapper {
+        display: none; /* Ocultar en móvil */
+    }
+
+    .registro-card {
+        width: 100%;
+        padding: 2rem;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+}

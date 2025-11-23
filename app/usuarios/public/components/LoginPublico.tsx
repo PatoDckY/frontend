@@ -105,8 +105,8 @@ export default function LoginPublico() {
               errores.correo
                 ? "input-error"
                 : loginData.correo
-                ? "input-success"
-                : ""
+                  ? "input-success"
+                  : ""
             }
           />
           {errores.correo && <p className="error">{errores.correo}</p>}
@@ -124,8 +124,8 @@ export default function LoginPublico() {
                 errores.contrasena
                   ? "input-error"
                   : loginData.contrasena
-                  ? "input-success"
-                  : ""
+                    ? "input-success"
+                    : ""
               }
             />
             <span
@@ -143,6 +143,18 @@ export default function LoginPublico() {
         <button type="submit" className="btn-submit" disabled={cargando}>
           {cargando ? "Verificando..." : "Iniciar Sesión"}
         </button>
+
+        <p className="enlace-magico-link">
+          ¿Olvidaste tu contraseña o prefieres usar un enlace mágico?{" "}
+          <span
+            className="link"
+            onClick={() => router.push("/usuarios/public/screens/EnlaceMagico")}
+            style={{ color: "#0070f3", cursor: "pointer", textDecoration: "underline" }}
+          >
+            Usar enlace mágico
+          </span>
+        </p>
+
 
         <p className="registro-link">
           ¿No tienes cuenta?{" "}

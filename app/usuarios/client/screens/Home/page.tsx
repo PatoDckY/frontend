@@ -1,7 +1,7 @@
 // app/usuarios/public/screens/HomePublico/page.tsx
 
 // Importas solo el componente que tiene el contenido (Hero, Servicios, etc.)
-import Home from "../../components/HomePublico"; 
+import Home from "../../../public/components/HomePublico"; 
 
 export default function HomePublicoPage() {
   return (

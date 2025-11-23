@@ -1,0 +1,119 @@
+/* styles/BlogSidebar.css */
+
+:root {
+  --color-titulo: #004d80; /* Azul oscuro */
+  --color-texto-principal: #333333;
+  --color-gris-borde: #E5E7EB;
+  --color-gris-claro: #F9F9F9;
+  --color-blanco: #FFFFFF;
+  --color-enlace: #3B82F6; /* Azul de enlace */
+  --color-rss: #FF8800; /* Naranja/dorado para RSS */
+}
+
+.blog-sidebar-container {
+  width: 100%;
+  max-width: 300px; /* Ancho típico de una sidebar */
+  font-family: Arial, sans-serif;
+}
+
+/* --- Suscribirse a RSS --- */
+.sidebar-rss-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Alineado a la derecha */
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+}
+
+.rss-icon {
+  color: var(--color-rss);
+  margin-right: 0.5rem;
+}
+
+.rss-text {
+  color: var(--color-rss);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: text-decoration 0.2s;
+}
+
+.rss-text:hover {
+  text-decoration: underline;
+}
+
+/* --- Estilos Generales de Sección --- */
+.sidebar-section {
+  background-color: var(--color-blanco);
+  border: 1px solid var(--color-gris-borde);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-titulo);
+  margin-top: 0;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-gris-claro);
+}
+
+/* --- Sección de Categorías --- */
+.categorias-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.categoria-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  border-bottom: 1px dotted var(--color-gris-borde);
+}
+
+.categoria-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.categoria-item a {
+  color: var(--color-texto-principal);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.categoria-item a:hover {
+  color: var(--color-enlace);
+}
+
+.categoria-count {
+  color: var(--color-gris-texto-claro);
+  font-weight: 500;
+}
+
+/* --- Sección de Etiquetas --- */
+.etiquetas-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px; /* Espacio entre las etiquetas */
+}
+
+.etiqueta-link {
+  background-color: var(--color-gris-claro);
+  color: var(--color-gris-texto-claro);
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.etiqueta-link:hover {
+  background-color: var(--color-enlace);
+  color: var(--color-blanco);
+}

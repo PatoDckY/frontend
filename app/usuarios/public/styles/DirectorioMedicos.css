@@ -1,0 +1,197 @@
+/* styles/DirectorioMedicos.css */
+
+:root {
+    --color-azul-fondo: #2B78E4; /* Azul brillante similar al de la imagen */
+    --color-azul-oscuro: #0A3D62; 
+    --color-blanco: #FFFFFF;
+    --color-gris-claro: #F5F5F5;
+    --color-gris-texto: #6B7280;
+    --color-gris-borde: #E5E7EB;
+    --color-azul-link: #3B82F6;
+}
+
+.directorio-page-container {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--color-gris-claro);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* --- 1. Encabezado y Fondo --- */
+.directorio-header {
+    position: relative;
+    height: 180px; /* Altura del fondo azul */
+}
+
+.header-background {
+    /* Simula el degradado azul con patrón */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(160deg, #0A3D62 60%, #74B9FF 100%);
+    /* Opcional: añade el patrón sutil de la imagen */
+    /* background-image: url('/pattern-medico.svg'); */
+    opacity: 0.9;
+    z-index: 0;
+}
+
+.header-title {
+    position: relative;
+    color: var(--color-blanco);
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    padding-top: 50px;
+    z-index: 1;
+}
+
+/* --- 2. Barra de Búsqueda Flotante --- */
+.search-bar-wrapper {
+    position: relative;
+    z-index: 10; /* Asegura que flote sobre el header */
+    width: 100%;
+    margin-top: -60px; /* Mueve la barra hacia arriba, sobre el header */
+}
+
+.search-card {
+    background: var(--color-blanco);
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Selector de Pestañas */
+.tab-selector {
+    background-color: var(--color-gris-claro);
+    border-radius: 8px;
+    padding: 0.25rem;
+    display: flex;
+    margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: transparent;
+    color: var(--color-gris-texto);
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.tab-btn.active {
+    background-color: var(--color-blanco);
+    color: var(--color-azul-link);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.tab-btn.inactive:hover {
+    color: var(--color-azul-link);
+}
+
+/* Formulario de Búsqueda */
+.search-form {
+    display: flex;
+    width: 100%;
+    gap: 0.5rem;
+}
+
+.search-input {
+    flex-grow: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-gris-borde);
+    border-radius: 8px;
+    font-size: 1rem;
+    color: var(--color-negro-texto);
+}
+
+.search-btn {
+    background-color: var(--color-azul-link);
+    color: var(--color-blanco);
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+}
+
+.search-btn:hover {
+    background-color: #2563EB;
+}
+
+.filters-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--color-blanco);
+    color: var(--color-gris-texto);
+    border: 1px solid var(--color-gris-borde);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+}
+
+.filters-btn:hover {
+    background-color: var(--color-gris-claro);
+    color: var(--color-azul-link);
+}
+
+/* --- 3. Contenido Principal y Resultados --- */
+.directorio-main-content {
+    max-width: 1200px;
+    margin: 3rem auto 5rem auto;
+    padding: 0 20px;
+}
+
+.section-subtitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-negro-texto);
+    margin-bottom: 2rem;
+    margin-top: 1rem;
+}
+
+.medicos-grid {
+    display: grid;
+    /* 4 columnas en escritorio, adaptándose a tarjetas de 300px */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    justify-content: center;
+}
+
+/* --- Media Queries --- */
+@media (max-width: 768px) {
+    .search-card {
+        width: 95%;
+        padding: 1.5rem;
+    }
+    .search-form {
+        flex-wrap: wrap;
+    }
+    .search-input {
+        flex-grow: 1;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    .search-btn,
+    .filters-btn {
+        flex-grow: 1;
+        width: calc(50% - 0.5rem);
+    }
+    .medicos-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+}

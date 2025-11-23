@@ -1,10 +1,9 @@
-import PublicLayout from "../../layout/PublicLayout";
-import LoginPublico from "../../components/LoginPublico";
+import LoginPublico from "../../components/Login";
 
 export default function Login() {
   return (
-    <PublicLayout>
+    <>
       <LoginPublico />
-    </PublicLayout>
+    </>
   );
 }

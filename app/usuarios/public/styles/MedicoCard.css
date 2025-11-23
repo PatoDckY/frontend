@@ -1,0 +1,155 @@
+/* styles/MedicoCard.css */
+
+:root {
+  --color-negro-texto: #1F2937;
+  --color-gris-claro-borde: #E5E7EB;
+  --color-gris-texto-claro: #6B7280;
+  --color-azul-link: #3B82F6; /* Azul para el botón de acción */
+  --color-fondo-boton: #F3F4F6;
+  --color-hover-boton: #E5E7EB;
+  --color-blanco: #FFFFFF;
+}
+
+.medico-card {
+  background-color: var(--color-blanco);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 300px; /* Ancho ajustado a la imagen de referencia */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.medico-image-wrapper {
+  /* La imagen está en la parte superior, sin bordes redondeados visibles */
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+
+.medico-image {
+  /* Asegura que la imagen se vea bien dentro del contenedor */
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.medico-content {
+  padding: 1.25rem 1.25rem 0 1.25rem;
+}
+
+/* --- TÍTULO Y ESPECIALIDAD --- */
+.medico-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-negro-texto);
+  margin: 0 0 0.25rem 0;
+  line-height: 1.3;
+}
+
+.medico-specialty {
+  font-size: 0.95rem;
+  color: var(--color-gris-texto-claro);
+  margin: 0 0 1rem 0;
+  font-weight: 500;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--color-gris-claro-borde);
+  margin: 0 0 1rem 0;
+}
+
+/* --- GRUPOS DE DETALLE --- */
+.detail-group {
+  display: flex;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: var(--color-negro-texto);
+}
+
+/* Detalle del Hospital */
+.hospital-detail {
+  flex-direction: column;
+  margin-bottom: 0.5rem;
+}
+
+.hospital-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.hospital-label {
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.hospital-name {
+  font-weight: 500;
+  color: var(--color-azul-link);
+  margin-left: 1.5rem; /* Alineado bajo el nombre del hospital */
+  margin-top: 0;
+}
+
+.icon-plus {
+  color: var(--color-azul-link);
+  stroke-width: 2.5;
+}
+
+/* Detalle de Ubicación */
+.location-detail {
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.icon-location {
+  color: var(--color-gris-texto-claro);
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.location-info {
+  flex-grow: 1;
+}
+
+.location-line {
+  margin-bottom: 0.25rem;
+}
+
+.location-label {
+  font-weight: 700;
+  margin-right: 0.3rem;
+}
+
+.location-value {
+  font-weight: 500;
+}
+
+.location-address {
+  font-size: 0.85rem;
+  color: var(--color-gris-texto-claro);
+  margin: 0;
+  line-height: 1.3;
+}
+
+
+/* --- BOTÓN VER MÁS --- */
+.btn-ver-mas-medico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% + 2.5rem); /* Se extiende a lo largo de la tarjeta */
+  margin: 1.25rem -1.25rem 0; /* Negativo para alinear con los bordes */
+  padding: 0.75rem 0;
+  background-color: var(--color-fondo-boton);
+  color: var(--color-azul-link);
+  text-decoration: none;
+  border-top: 1px solid var(--color-gris-claro-borde);
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.btn-ver-mas-medico:hover {
+  background-color: var(--color-hover-boton);
+}
