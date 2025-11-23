@@ -70,8 +70,7 @@ export default function RegistroPublico() {
         } else if (Number(value) > 100) {
           error = "La edad no puede superar los 100 años";
         }
-      break;
-
+        break;
       case "sexo":
         if (!value) error = "Seleccione un sexo";
         break;
