@@ -100,10 +100,10 @@ export default function HeaderPublico() {
             <Link href="/usuarios/public/screens/QuienesSomos" onClick={toggleMenu}>¿Quiénes Somos?</Link>
             
             <div className="mobile-auth-buttons">
-                <Link href="/usuarios/public/screens/Login" className="btn-login mobile" onClick={toggleMenu}>
+                <Link href="/usuarios/visitante/screens/Login" className="btn-login mobile" onClick={toggleMenu}>
                     Iniciar Sesión
                 </Link>
-                <Link href="/usuarios/public/screens/Registro" className="btn-registro mobile" onClick={toggleMenu}>
+                <Link href="/usuarios/visitante/screens/Registro" className="btn-registro mobile" onClick={toggleMenu}>
                     Registrarse
                 </Link>
             </div>
