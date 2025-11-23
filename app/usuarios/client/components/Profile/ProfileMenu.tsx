@@ -27,7 +27,7 @@ export default function ProfileMenu() {
       toast.info("Cerrando sesión...");
       
       // 3. Redirección forzada al Login (limpia estados de React)
-      window.location.href = "/usuarios/public/screens/Login";
+      window.location.href = "/usuarios/public/screens/HomePublico";
     }
   };
 
