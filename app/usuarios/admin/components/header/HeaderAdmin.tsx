@@ -73,7 +73,7 @@ export default function HeaderAdmin() {
             </Link>
 
             {/* Gestión de Médicos */}
-            <Link href="/usuarios/admin/screens/GestionDirectorio" className="nav-link">
+            <Link href="/usuarios/admin/screens/Directorio" className="nav-link">
                <Stethoscope size={18} /> Directorio
             </Link>
 

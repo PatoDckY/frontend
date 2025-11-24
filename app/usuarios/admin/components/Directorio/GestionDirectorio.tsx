@@ -3,9 +3,9 @@
 import React, { useState } from 'react';
 import { Search, SlidersHorizontal, PlusCircle, Users, Edit, Trash2 } from 'lucide-react';
 import MedicoCard from '../../../public/components/cards/MedicoCard'; // Reutilizamos la tarjeta visual
-//import CrearMedicoModal from './modals/CrearMedicoModal'; // (Debes crear este modal similar al de publicaciones)
-//import EditarMedicoModal from './modals/EditarMedicoModal'; // (Debes crear este modal similar al de publicaciones)
-import '../../styles/Academia/GestionDirectorio.css'; // CSS Específico de Admin
+import CrearMedicoModal from './modals/CrearMedicoModal'; // (Debes crear este modal similar al de publicaciones)
+import EditarMedicoModal from './modals/EditarMedicoModal'; // (Debes crear este modal similar al de publicaciones)
+import '../../styles/Directorio/GestionDirectorio.css'; // CSS Específico de Admin
 
 // --- DATOS DE EJEMPLO ---
 const MEDICOS_INICIALES = [
@@ -120,36 +120,37 @@ export default function GestionDirectorio() {
                 </div>
             </div>
 
-            {/* --- 3. GRID DE MÉDICOS CON CONTROLES --- */}
+            {/* ... dentro del return ... */}
             <main className="admin-directorio-content">
                 {medicosFiltrados.length > 0 ? (
                     <div className="admin-medicos-grid">
                         {medicosFiltrados.map(medico => (
+                            // El wrapper tiene la sombra y el borde redondeado global
                             <div key={medico.id} className="admin-medico-wrapper">
                                 
-                                {/* Tarjeta Visual (Reutilizada) */}
+                                {/* La tarjeta visual (sin lógica de click) */}
                                 <MedicoCard 
                                     imagenSrc={medico.imagenSrc}
                                     nombre={medico.nombre}
                                     especialidad={medico.especialidad}
                                     hospital={medico.hospital}
                                     direccion={medico.direccion}
-                                    linkVerMas="#" // En admin no redirige
+                                    linkVerMas="#" 
                                 />
 
-                                {/* Panel de Control (Overlay) */}
+                                {/* Los controles ahora parecen el pie de la tarjeta */}
                                 <div className="medico-controls">
                                     <button 
                                         className="btn-control-medico edit"
                                         onClick={() => handleEdit(medico.id)}
                                     >
-                                        <Edit size={16} /> Editar
+                                        <Edit size={18} /> Editar
                                     </button>
                                     <button 
                                         className="btn-control-medico delete"
                                         onClick={() => handleDelete(medico.id)}
                                     >
-                                        <Trash2 size={16} /> Eliminar
+                                        <Trash2 size={18} /> Eliminar
                                     </button>
                                 </div>
                             </div>
@@ -164,7 +165,18 @@ export default function GestionDirectorio() {
             {/* Aquí irían tus componentes CrearMedicoModal y EditarMedicoModal */}
             {/* <CrearMedicoModal isOpen={isCreateModalOpen} onClose={() => setCreateModalOpen(false)} onSave={guardarNuevoMedico} /> */}
             {/* <EditarMedicoModal isOpen={isEditModalOpen} onClose={() => setEditModalOpen(false)} onSave={actualizarMedico} medico={medicoAEditar} /> */}
+            <CrearMedicoModal 
+                isOpen={isCreateModalOpen} 
+                onClose={() => setCreateModalOpen(false)} 
+                onSave={guardarNuevoMedico} 
+            />
 
+            <EditarMedicoModal 
+                isOpen={isEditModalOpen} 
+                onClose={() => setEditModalOpen(false)} 
+                onSave={actualizarMedico} 
+                medico={medicoAEditar} 
+            />
         </div>
     );
 }

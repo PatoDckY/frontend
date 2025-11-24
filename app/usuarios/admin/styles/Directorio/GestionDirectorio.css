@@ -3,9 +3,9 @@
 :root {
     --adm-azul: #0A3D62;
     --adm-blanco: #FFFFFF;
-    --adm-fondo: #F3F4F6;
-    --adm-borde: #E5E7EB;
-    --adm-texto: #374151;
+    --adm-fondo: #F8FAFC;
+    --adm-borde: #E2E8F0;
+    --adm-texto: #334155;
     --adm-rojo: #EF4444;
     --adm-amarillo: #FFC300;
 }
@@ -13,48 +13,54 @@
 .admin-directorio-container {
     background-color: var(--adm-fondo);
     min-height: 100vh;
-    font-family: Arial, sans-serif;
-    padding-bottom: 4rem;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    padding-bottom: 6rem;
 }
 
 /* --- HEADER --- */
 .admin-directorio-header {
     position: relative;
-    height: 200px;
+    height: 240px;
     background-color: var(--adm-azul);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     color: var(--adm-blanco);
+    padding-bottom: 2rem;
 }
 
 .header-background {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(135deg, #0A3D62 0%, #062a45 100%);
-    opacity: 0.9;
+    background: linear-gradient(145deg, #0F172A 0%, #0A3D62 100%);
+    opacity: 0.95;
 }
 
 .header-content {
     position: relative;
     z-index: 2;
+    margin-top: -20px;
 }
 
 .header-title {
-    font-size: 2.2rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.8rem;
+    letter-spacing: -0.5px;
+    color: #FFFFFF; /* Asegurado blanco puro */
 }
 
 .header-subtitle {
-    font-size: 1rem;
+    font-size: 1.1rem;
     opacity: 0.9;
+    font-weight: 300;
+    color: #F1F5F9;
 }
 
 /* --- TOOLS BAR --- */
 .admin-tools-wrapper {
-    margin-top: -40px;
+    margin-top: -50px;
     position: relative;
     z-index: 10;
     padding: 0 20px;
@@ -65,62 +71,83 @@
 .admin-tools-card {
     background-color: var(--adm-blanco);
     width: 100%;
-    max-width: 1000px;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    max-width: 1100px;
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 30px;
     justify-content: space-between;
     align-items: center;
+    border: 1px solid rgba(0,0,0,0.03);
 }
 
+/* --- CORRECCIÓN BUSCADOR --- */
 .search-section {
     display: flex;
-    gap: 10px;
-    flex: 1;
+    /* Espacio generoso para evitar que se encimen */
+    gap: 20px; 
+    align-items: center;
+    flex: 1; /* Ocupa espacio disponible */
     min-width: 300px;
 }
 
 .search-input-wrapper {
-    flex-grow: 1;
+    flex-grow: 1; /* El input crece para llenar el espacio */
     position: relative;
+    max-width: 400px; /* Limita el largo del input para que no sea enorme */
 }
 
 .search-icon {
     position: absolute;
-    left: 12px;
+    left: 14px;
     top: 50%;
     transform: translateY(-50%);
-    color: #9CA3AF;
+    color: #94A3B8;
 }
 
 .search-input-wrapper input {
     width: 100%;
-    padding: 0.7rem 0.7rem 0.7rem 2.5rem;
+    padding: 0.8rem 1rem 0.8rem 2.8rem;
     border: 1px solid var(--adm-borde);
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 0.95rem;
     outline: none;
+    transition: all 0.2s;
+    background-color: #F8FAFC;
+}
+
+.search-input-wrapper input:focus {
+    background-color: #fff;
+    border-color: var(--adm-azul);
+    box-shadow: 0 0 0 3px rgba(10, 61, 98, 0.1);
 }
 
 .btn-filters {
+    /* Evita que el botón se aplaste */
+    flex-shrink: 0; 
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 0.7rem 1rem;
+    gap: 8px;
+    padding: 0.8rem 1.5rem;
     border: 1px solid var(--adm-borde);
     background: white;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     color: var(--adm-texto);
+    font-weight: 600;
+    transition: background 0.2s;
+    white-space: nowrap;
 }
+
+.btn-filters:hover { background-color: #F1F5F9; }
 
 .actions-section {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 20px;
+    justify-content: flex-end;
 }
 
 .btn-admin-create {
@@ -130,56 +157,96 @@
     background-color: var(--adm-azul);
     color: white;
     border: none;
-    padding: 0.7rem 1.2rem;
-    border-radius: 8px;
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: transform 0.1s, background 0.2s;
+    box-shadow: 0 4px 12px rgba(10, 61, 98, 0.2);
+    white-space: nowrap;
 }
 
-.btn-admin-create:hover { background-color: #052640; }
+.btn-admin-create:hover { 
+    background-color: #0F172A;
+    transform: translateY(-1px);
+}
 
 .stats-badge {
     display: flex;
     align-items: center;
-    gap: 5px;
-    background-color: #F3F4F6;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
+    gap: 8px;
+    background-color: #EFF6FF;
+    padding: 0.6rem 1.2rem;
+    border-radius: 30px;
+    font-size: 0.9rem;
     font-weight: 600;
-    color: var(--adm-texto);
+    color: var(--adm-azul);
+    border: 1px solid #DBEAFE;
+    white-space: nowrap;
 }
 
-/* --- GRID --- */
+/* --- GRID DE CONTENIDO Y TARJETAS SIMÉTRICAS --- */
 .admin-directorio-content {
     max-width: 1200px;
-    margin: 3rem auto;
+    margin: 4rem auto;
     padding: 0 20px;
 }
 
 .admin-medicos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    /* Tarjetas compactas (300px) que no se estiran infinitamente */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 30px;
     justify-content: center;
+    /* Si hay pocas tarjetas, que se queden a la izquierda o centro según prefieras. */
+    /* justify-items: center; */ 
 }
 
-/* Wrapper de Tarjeta Admin */
+/* Wrapper de la tarjeta (Columna Flexible) */
 .admin-medico-wrapper {
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* Altura del 100% del grid row para igualar alturas */
+    height: 100%; 
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.05);
+    overflow: hidden;
     transition: transform 0.2s;
+    max-width: 350px; /* Límite de ancho para que no se vea gigante */
+    margin: 0 auto;   /* Centrado en su celda */
+    width: 100%;
 }
 
 .admin-medico-wrapper:hover {
     transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
 }
 
-/* Controles superpuestos o abajo */
-.medico-controls {
+/* TRUCO DE ALINEACIÓN:
+   Hacemos que el componente <MedicoCard> (el div superior) crezca 
+   para ocupar todo el espacio disponible, empujando los controles al fondo.
+*/
+.admin-medico-wrapper > div:first-child {
+    flex-grow: 1; /* Esto es la clave para la simetría */
     display: flex;
-    margin-top: 10px;
-    gap: 10px;
+    flex-direction: column;
+    
+    /* Quitamos estilos visuales de la tarjeta original para fusionarla */
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    width: 100% !important;
+    padding-bottom: 0 !important;
+}
+
+/* Controles integrados en la parte inferior (Footer fijo) */
+.medico-controls {
+    margin-top: auto; /* Seguridad extra para empujar al fondo */
+    display: flex;
+    border-top: 1px solid var(--adm-borde);
+    background-color: #FFFFFF;
 }
 
 .btn-control-medico {
@@ -187,37 +254,53 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-    padding: 0.6rem;
-    border-radius: 6px;
+    gap: 8px;
+    padding: 1rem; /* Botones más altos y clicables */
     font-weight: 600;
     font-size: 0.9rem;
     cursor: pointer;
-    border: 1px solid transparent;
+    border: none;
+    background: transparent;
+    transition: all 0.2s;
 }
 
 .btn-control-medico.edit {
-    background-color: #E0F2FE;
+    color: #64748B;
+    border-right: 1px solid var(--adm-borde);
+}
+
+.btn-control-medico.edit:hover {
+    background-color: #F8FAFC;
     color: #0284C7;
-    border-color: #BAE6FD;
 }
 
 .btn-control-medico.delete {
+    color: #64748B;
+}
+
+.btn-control-medico.delete:hover {
     background-color: #FEF2F2;
     color: var(--adm-rojo);
-    border-color: #FECACA;
 }
 
 /* --- RESPONSIVE --- */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .admin-tools-card {
         flex-direction: column;
         align-items: stretch;
+        gap: 20px;
+        padding: 1.5rem;
     }
-    .search-section {
+    
+    .search-section, .actions-section {
         width: 100%;
+        flex-wrap: wrap;
     }
-    .actions-section {
-        justify-content: space-between;
+    
+    .search-input-wrapper {
+        max-width: 100%; /* En móvil sí ocupa todo el ancho */
     }
+
+    .btn-filters { width: 100%; justify-content: center; }
+    .actions-section { justify-content: space-between; }
 }
