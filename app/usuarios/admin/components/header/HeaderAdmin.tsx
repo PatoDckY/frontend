@@ -69,7 +69,12 @@ export default function HeaderAdmin() {
 
             {/* Gestión de Contenido (Home, Nosotros, Servicios) */}
             <Link href="/usuarios/admin/screens/GestionWeb" className="nav-link">
-               <Globe size={18} /> Sitio Web
+               <Globe size={18} /> Servicios
+            </Link>
+            
+            {/* Cursos */}
+            <Link href="/usuarios/admin/screens/Cursos" className="nav-link">
+               <GraduationCap size={18} /> Cursos
             </Link>
 
             {/* Gestión de Médicos */}
