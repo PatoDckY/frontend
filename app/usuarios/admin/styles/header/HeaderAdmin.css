@@ -1,0 +1,218 @@
+/* styles/header/HeaderAdmin.css */
+
+:root {
+  --ha-bg: #FFFFFF;
+  --ha-top-bg: #111827; /* Casi negro para denotar admin */
+  --ha-text: #374151;
+  --ha-accent: #0A3D62; /* Azul corporativo */
+  --ha-hover-bg: #F3F4F6;
+  --ha-blanco: #FFFFFF;
+  --ha-borde: #E5E7EB;
+}
+
+/* --- 1. TOP BAR ADMIN --- */
+.top-bar-admin {
+  background-color: var(--ha-top-bg);
+  color: var(--ha-blanco);
+  font-size: 0.85rem;
+  padding: 0.6rem 0;
+}
+
+.top-bar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  background-color: rgba(255,255,255,0.15);
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #FFC300; /* Amarillo para resaltar */
+}
+
+.top-bar-links a {
+  color: #D1D5DB;
+  text-decoration: none;
+  transition: color 0.2s;
+  font-weight: 500;
+}
+
+.top-bar-links a:hover { color: var(--ha-blanco); text-decoration: underline; }
+
+/* --- 2. HEADER PRINCIPAL --- */
+.header-admin {
+  background-color: var(--ha-bg);
+  border-bottom: 1px solid var(--ha-borde);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.header-admin.scrolled {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.header-container {
+  max-width: 1400px; /* Ancho completo para tener espacio */
+  margin: 0 auto;
+  padding: 0.8rem 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Logo Area */
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.logo-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.logo-title {
+  font-size: 0.8rem;
+  color: var(--ha-text);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.logo-subtitle {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--ha-accent);
+}
+
+/* Navegación Desktop */
+.nav-desktop {
+  display: flex;
+  gap: 5px;
+  background-color: var(--ha-hover-bg); /* Fondo sutil para agrupar menú */
+  padding: 5px;
+  border-radius: 8px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ha-text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.nav-link:hover {
+  background-color: #E5E7EB;
+  color: #000;
+}
+
+/* Sección Derecha */
+.right-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--ha-text);
+  cursor: pointer;
+}
+
+/* --- 3. MENÚ MÓVIL --- */
+.mobile-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: var(--ha-bg);
+  border-top: 1px solid var(--ha-borde);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-in-out;
+}
+
+.mobile-menu.open {
+  max-height: 600px;
+}
+
+.nav-mobile {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  gap: 10px;
+}
+
+.mobile-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #9CA3AF;
+    font-weight: 700;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.mobile-label:first-child { margin-top: 0; }
+
+.nav-mobile a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ha-text);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.nav-mobile a:hover {
+    background-color: var(--ha-hover-bg);
+}
+
+.mobile-divider {
+    height: 1px;
+    background-color: var(--ha-borde);
+    margin: 5px 0;
+}
+
+/* --- MEDIA QUERIES --- */
+@media (max-width: 1100px) {
+  .nav-desktop {
+    display: none;
+  }
+  .menu-toggle {
+    display: block;
+  }
+}
+
+@media (max-width: 600px) {
+  .logo-text-wrapper {
+      display: none;
+  }
+}

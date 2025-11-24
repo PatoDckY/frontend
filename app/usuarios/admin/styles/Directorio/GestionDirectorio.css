@@ -1,0 +1,223 @@
+/* styles/admin/GestionDirectorio.css */
+
+:root {
+    --adm-azul: #0A3D62;
+    --adm-blanco: #FFFFFF;
+    --adm-fondo: #F3F4F6;
+    --adm-borde: #E5E7EB;
+    --adm-texto: #374151;
+    --adm-rojo: #EF4444;
+    --adm-amarillo: #FFC300;
+}
+
+.admin-directorio-container {
+    background-color: var(--adm-fondo);
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    padding-bottom: 4rem;
+}
+
+/* --- HEADER --- */
+.admin-directorio-header {
+    position: relative;
+    height: 200px;
+    background-color: var(--adm-azul);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--adm-blanco);
+}
+
+.header-background {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, #0A3D62 0%, #062a45 100%);
+    opacity: 0.9;
+}
+
+.header-content {
+    position: relative;
+    z-index: 2;
+}
+
+.header-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.header-subtitle {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+/* --- TOOLS BAR --- */
+.admin-tools-wrapper {
+    margin-top: -40px;
+    position: relative;
+    z-index: 10;
+    padding: 0 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.admin-tools-card {
+    background-color: var(--adm-blanco);
+    width: 100%;
+    max-width: 1000px;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-section {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    min-width: 300px;
+}
+
+.search-input-wrapper {
+    flex-grow: 1;
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9CA3AF;
+}
+
+.search-input-wrapper input {
+    width: 100%;
+    padding: 0.7rem 0.7rem 0.7rem 2.5rem;
+    border: 1px solid var(--adm-borde);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.btn-filters {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--adm-borde);
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--adm-texto);
+}
+
+.actions-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-admin-create {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--adm-azul);
+    color: white;
+    border: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-admin-create:hover { background-color: #052640; }
+
+.stats-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #F3F4F6;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--adm-texto);
+}
+
+/* --- GRID --- */
+.admin-directorio-content {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 20px;
+}
+
+.admin-medicos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    justify-content: center;
+}
+
+/* Wrapper de Tarjeta Admin */
+.admin-medico-wrapper {
+    position: relative;
+    transition: transform 0.2s;
+}
+
+.admin-medico-wrapper:hover {
+    transform: translateY(-5px);
+}
+
+/* Controles superpuestos o abajo */
+.medico-controls {
+    display: flex;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.btn-control-medico {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0.6rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.btn-control-medico.edit {
+    background-color: #E0F2FE;
+    color: #0284C7;
+    border-color: #BAE6FD;
+}
+
+.btn-control-medico.delete {
+    background-color: #FEF2F2;
+    color: var(--adm-rojo);
+    border-color: #FECACA;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .admin-tools-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .search-section {
+        width: 100%;
+    }
+    .actions-section {
+        justify-content: space-between;
+    }
+}

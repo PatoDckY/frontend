@@ -1,67 +1,83 @@
-// components/Navegacion.tsx
 "use client";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
-// Importamos TODOS los componentes de navegación (Manteniendo tus rutas)
+// COMPONENTES SEGÚN ROLES
 import HeaderPublico from "../app/usuarios/public/components/header/HeaderPublico"; 
+import FooterPublico from "../app/usuarios/public/components/footer/FooterPublico";
+
 import HeaderClient from "../app/usuarios/client/components/header/HeaderClient";
-import FooterPublico from "../app/usuarios/public/components/footer/FooterPublico"; 
-import FooterClient from "../app/usuarios/client/components/footer/FooterClient"; 
+import FooterClient from "../app/usuarios/client/components/footer/FooterClient";
+
+import HeaderAdmin from "../app/usuarios/admin/components/header/HeaderAdmin";
+import FooterAdmin from "../app/usuarios/admin/components/footer/FooterAdmin";
 
 export default function Navegacion({ children }: { children: React.ReactNode }) {
-  const [estaLogueado, setEstaLogueado] = useState(false);
+
+  const [estado, setEstado] = useState({
+    logueado: false,
+    rol: "publico" as "publico" | "cliente" | "admin",
+  });
+
   const [cargando, setCargando] = useState(true);
   const pathname = usePathname();
 
   useEffect(() => {
-    // Función para verificar el token (MEJORADA)
     const verificarSesion = () => {
       const token = localStorage.getItem("token");
-      
-      // VALIDACIÓN ESTRICTA:
-      // 1. Si no hay token
-      // 2. Si el token es el texto "undefined" (error común)
-      // 3. Si el token es el texto "null" (error común)
+      let rol = localStorage.getItem("rol");
+
       if (!token || token === "undefined" || token === "null") {
-        setEstaLogueado(false);
-        // Limpieza preventiva: si hay basura, la borramos
-        if (token) localStorage.removeItem("token"); 
-      } else {
-        // Solo si pasa las pruebas, lo consideramos logueado
-        setEstaLogueado(true);
+        localStorage.removeItem("token");
+        localStorage.removeItem("rol");
+
+        setEstado({
+          logueado: false,
+          rol: "publico",
+        });
+
+        setCargando(false);
+        return;
       }
-      
+
+      // Normalizamos por seguridad
+      rol = rol?.toLowerCase() ?? "publico";
+
+      if (rol === "admin") {
+        setEstado({ logueado: true, rol: "admin" });
+      } else if (rol === "cliente") {
+        setEstado({ logueado: true, rol: "cliente" });
+      } else {
+        setEstado({ logueado: false, rol: "publico" });
+      }
+
       setCargando(false);
     };
 
     verificarSesion();
-    
-    // Escuchar cambios en localStorage
-    window.addEventListener('storage', verificarSesion);
-    
-    return () => {
-        window.removeEventListener('storage', verificarSesion);
-    };
-  }, [pathname]); 
+    window.addEventListener("storage", verificarSesion);
+    return () => window.removeEventListener("storage", verificarSesion);
+  }, [pathname]);
 
-  // Evitar parpadeo
-  if (cargando) {
-    return <div style={{minHeight: '100vh', background: '#F4F7F6'}}></div>; 
-  }
+  if (cargando) return <div style={{ minHeight: "100vh" }}></div>;
+
+  const obtenerHeader = () => {
+    if (!estado.logueado) return <HeaderPublico />;
+    if (estado.rol === "admin") return <HeaderAdmin />;
+    return <HeaderClient />;
+  };
+
+  const obtenerFooter = () => {
+    if (!estado.logueado) return <FooterPublico />;
+    if (estado.rol === "admin") return <FooterAdmin />;
+    return <FooterClient />;
+  };
 
   return (
     <>
-      {/* 1. Header Condicional */}
-      {estaLogueado ? <HeaderClient /> : <HeaderPublico />}
-      
-      {/* 2. Contenido de la Página */}
-      <main>
-        {children}
-      </main>
-
-      {/* 3. Footer Condicional */}
-      {estaLogueado ? <FooterClient /> : <FooterPublico />}
+      {obtenerHeader()}
+      <main>{children}</main>
+      {obtenerFooter()}
     </>
   );
 }

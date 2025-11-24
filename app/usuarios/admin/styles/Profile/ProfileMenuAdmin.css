@@ -1,0 +1,109 @@
+.profile-menu-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Botón del perfil */
+.profile-button {
+  background: linear-gradient(145deg, #ffffff, #c0c0c0);
+  border: 1px solid #2f2f2f;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 2px;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+.profile-button:hover {
+  transform: scale(1.05);
+  border-color: #00bcd4;
+  box-shadow: 0 0 10px rgba(0, 188, 212, 0.4);
+}
+
+/* Imagen */
+.profile-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Dropdown */
+.profile-dropdown {
+  position: absolute;
+  right: 0;
+  top: 58px;
+  width: 230px;
+  background: #ffffff;
+  border: 1px solid #2b2b2b;
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+  color: #e0e0e0;
+  z-index: 1000;
+  overflow: hidden;
+  animation: dropdownFade 0.25s ease-out;
+  backdrop-filter: blur(12px);
+}
+
+/* Información del perfil */
+.profile-info {
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: left;
+}
+
+.profile-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: #000000;
+  margin-bottom: 2px;
+}
+
+.profile-email {
+  font-size: 13px;
+  color: #524f4f;
+  word-break: break-all;
+}
+
+/* Opciones */
+.profile-option {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #292929;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease;
+  font-size: 14px;
+}
+
+.profile-option:hover {
+  background: rgba(0, 188, 212, 0.12);
+  color: #00e5ff;
+}
+
+.logout {
+  color: #ff0f0b;
+}
+
+.logout:hover {
+  background: rgba(239, 83, 80, 0.12);
+  color: #ff220e;
+}
+
+/* Animación de aparición */
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

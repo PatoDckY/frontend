@@ -60,31 +60,40 @@ export default function LoginPublico() {
 
     try {
       setCargando(true);
-      
-      // Petición al Backend
+
       const res = await axios.post(
         "https://backend-7nyf.onrender.com/auth/login",
         loginData
       );
 
       const token = res.data.token;
+      const rol = res.data.usuario?.rol?.nombre?.toLowerCase() ?? "cliente";
+
+
+
       if (!token) {
         toast.error("Error: No se recibió el token de seguridad.");
         return;
       }
 
-      // Guardar Token
+      // Guardamos token y rol
       localStorage.setItem("token", token);
+      localStorage.setItem("rol", rol);
 
-      toast.success(res.data.mensaje || "¡Bienvenido! Inicio de sesión exitoso.");
+      toast.success(res.data.mensaje || "¡Bienvenido!");
 
-      // Redirección
+      // Redirección según rol
       setTimeout(() => {
-        router.push("/usuarios/public/screens/HomePublico");
-      }, 1500);
+        if (rol === "admin") {
+          router.push("/admin/HomeAdmin");
+        } else {
+          router.push("/usuarios/public/screens/HomePublico");
+        }
+      }, 1200);
 
     } catch (error: any) {
       console.error("Error de login:", error);
+
       if (error.response?.status === 401) {
         toast.error("Correo o contraseña incorrectos.");
       } else if (error.response?.status === 404) {
@@ -92,10 +101,12 @@ export default function LoginPublico() {
       } else {
         toast.error("Error de conexión. Intente más tarde.");
       }
+
     } finally {
       setCargando(false);
     }
   };
+
 
   return (
     <div className="login-container">
