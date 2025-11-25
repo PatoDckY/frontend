@@ -1,9 +1,9 @@
 // screens/admin/modals/CrearCursoModal.tsx
 "use client";
 import React, { useState } from 'react';
-import { X, Save, BookOpen, Calendar, User, MapPin, DollarSign, Image as ImageIcon } from 'lucide-react';
-// Reutilizamos los estilos de modales que ya tienes
-import '../../../styles/Directorio/MedicoModals.css';
+import { X, Save, BookOpen } from 'lucide-react';
+// IMPORTAMOS EL NUEVO CSS
+import '../../../styles/Cursos/CursoModals.css';
 
 interface CrearCursoModalProps {
   isOpen: boolean;
@@ -23,7 +23,7 @@ export default function CrearCursoModal({ isOpen, onClose, onSave }: CrearCursoM
     modalidad: 'Presencial',
     dirigidoA: 'Padres',
     cupoMaximo: 20,
-    costo: 0, // 0 para gratuito
+    costo: 0,
     ubicacion: '',
     imagenSrc: ''
   });
@@ -37,23 +37,18 @@ export default function CrearCursoModal({ isOpen, onClose, onSave }: CrearCursoM
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
     const nuevoCurso = {
       id: Date.now(),
       ...formData,
-      // Datos automáticos iniciales
       fechaPublicacion: new Date().toLocaleDateString(),
       inscripcionesAbiertas: true,
       cupoInscrito: 0,
       estado: 'Activo',
-      costo: formData.costo === 0 ? 'Gratuito' : formData.costo,
+      costo: Number(formData.costo) === 0 ? 'Gratuito' : formData.costo,
       imagenSrc: formData.imagenSrc || "/logo.png",
       linkDetalle: "#"
     };
-
     onSave(nuevoCurso);
-    
-    // Reset parcial del form
     setFormData({
       titulo: '', descripcion: '', instructor: '', categoria: 'Salud',
       fechaInicio: '', fechaFin: '', horario: '', modalidad: 'Presencial',
@@ -62,66 +57,71 @@ export default function CrearCursoModal({ isOpen, onClose, onSave }: CrearCursoM
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-container" style={{maxWidth: '800px'}}> {/* Un poco más ancho */}
+    <div className="course-modal-overlay">
+      <div className="course-modal-container">
         
-        <div className="modal-header">
-          <h2 className="modal-title"><BookOpen size={22}/> Nuevo Curso o Taller</h2>
-          <button className="btn-close" onClick={onClose}><X size={24} /></button>
+        {/* HEADER */}
+        <div className="course-modal-header">
+          <h2 className="course-modal-title"><BookOpen size={24}/> Crear Nuevo Curso</h2>
+          <button className="btn-close-course" onClick={onClose}><X size={24} /></button>
         </div>
 
-        <form onSubmit={handleSubmit} className="modal-form">
+        {/* FORM */}
+        <form onSubmit={handleSubmit} className="course-modal-form">
           
-          {/* --- SECCIÓN 1: INFORMACIÓN GENERAL --- */}
-          <h3 style={{fontSize: '0.9rem', color: '#0A3D62', marginBottom: '10px', borderBottom: '1px solid #eee', paddingBottom: '5px'}}>Información General</h3>
+          {/* SECCIÓN 1 */}
+          <div className="form-section-header">Información Básica</div>
           
-          <div className="form-group">
-            <label>Título del Curso</label>
-            <input name="titulo" value={formData.titulo} onChange={handleChange} placeholder="Ej: Primeros Auxilios" required />
+          <div className="form-grid-row">
+            <div className="course-input-group full-width">
+              <label>Título del Curso</label>
+              <input name="titulo" value={formData.titulo} onChange={handleChange} placeholder="Ej: Primeros Auxilios Pediátricos" required />
+            </div>
           </div>
 
-          <div className="form-group">
-            <label>Descripción</label>
-            <textarea name="descripcion" value={formData.descripcion} onChange={handleChange} rows={2} required />
+          <div className="form-grid-row">
+            <div className="course-input-group full-width">
+              <label>Descripción</label>
+              <textarea name="descripcion" value={formData.descripcion} onChange={handleChange} rows={3} required />
+            </div>
           </div>
 
-          <div className="form-row">
-            <div className="form-group half">
-              <label><User size={14}/> Instructor</label>
+          <div className="form-grid-row">
+            <div className="course-input-group">
+              <label>Instructor / Especialista</label>
               <input name="instructor" value={formData.instructor} onChange={handleChange} placeholder="Dr. Juan Pérez" required />
             </div>
-            <div className="form-group half">
+            <div className="course-input-group">
               <label>Categoría</label>
               <select name="categoria" value={formData.categoria} onChange={handleChange}>
                 <option value="Salud">Salud</option>
                 <option value="Psicología">Psicología</option>
                 <option value="Crianza">Crianza</option>
-                <option value="Lactancia">Lactancia</option>
                 <option value="Nutrición">Nutrición</option>
               </select>
             </div>
           </div>
 
-          {/* --- SECCIÓN 2: LOGÍSTICA (FECHAS Y MODALIDAD) --- */}
-          <h3 style={{fontSize: '0.9rem', color: '#0A3D62', marginTop: '20px', marginBottom: '10px', borderBottom: '1px solid #eee', paddingBottom: '5px'}}>Logística</h3>
+          {/* SECCIÓN 2 */}
+          <div className="form-section-header">Logística y Fechas</div>
 
-          <div className="form-row">
-            <div className="form-group half">
-              <label><Calendar size={14}/> Fecha Inicio</label>
-              <input type="text" name="fechaInicio" value={formData.fechaInicio} onChange={handleChange} placeholder="15 Nov 2025" required />
+          <div className="form-grid-row cols-3">
+            <div className="course-input-group">
+              <label>Fecha Inicio</label>
+              <input type="text" name="fechaInicio" value={formData.fechaInicio} onChange={handleChange} placeholder="DD/MM/AAAA" required />
             </div>
-            <div className="form-group half">
-              <label><Calendar size={14}/> Fecha Fin</label>
-              <input type="text" name="fechaFin" value={formData.fechaFin} onChange={handleChange} placeholder="15 Nov 2025" />
+            <div className="course-input-group">
+              <label>Fecha Fin</label>
+              <input type="text" name="fechaFin" value={formData.fechaFin} onChange={handleChange} placeholder="DD/MM/AAAA" />
             </div>
-            <div className="form-group half">
+            <div className="course-input-group">
               <label>Horario</label>
               <input name="horario" value={formData.horario} onChange={handleChange} placeholder="09:00 - 13:00" required />
             </div>
           </div>
 
-          <div className="form-row">
-            <div className="form-group third">
+          <div className="form-grid-row cols-3">
+            <div className="course-input-group">
               <label>Modalidad</label>
               <select name="modalidad" value={formData.modalidad} onChange={handleChange}>
                 <option value="Presencial">Presencial</option>
@@ -129,46 +129,49 @@ export default function CrearCursoModal({ isOpen, onClose, onSave }: CrearCursoM
                 <option value="Híbrido">Híbrido</option>
               </select>
             </div>
-            <div className="form-group third">
+            <div className="course-input-group">
               <label>Dirigido A</label>
               <select name="dirigidoA" value={formData.dirigidoA} onChange={handleChange}>
                 <option value="Padres">Padres</option>
                 <option value="Niños">Niños</option>
-                <option value="Adolescentes">Adolescentes</option>
                 <option value="Familia">Familia</option>
               </select>
             </div>
-            <div className="form-group third">
+            <div className="course-input-group">
               <label>Cupo Máximo</label>
               <input type="number" name="cupoMaximo" value={formData.cupoMaximo} onChange={handleChange} />
             </div>
           </div>
 
-          {formData.modalidad !== 'Online' && (
-            <div className="form-group">
-              <label><MapPin size={14}/> Ubicación / Sala</label>
-              <input name="ubicacion" value={formData.ubicacion} onChange={handleChange} placeholder="Auditorio Torre 2" />
-            </div>
-          )}
+          {/* SECCIÓN 3 */}
+          <div className="form-section-header">Detalles Finales</div>
 
-          {/* --- SECCIÓN 3: COSTO E IMAGEN --- */}
-          <div className="form-row" style={{marginTop: '15px'}}>
-            <div className="form-group half">
-              <label><DollarSign size={14}/> Costo (0 = Gratis)</label>
-              <input type="number" name="costo" value={formData.costo} onChange={handleChange} />
+          <div className="form-grid-row">
+            <div className="course-input-group">
+                <label>Ubicación (Sala/Zoom)</label>
+                <input name="ubicacion" value={formData.ubicacion} onChange={handleChange} placeholder="Auditorio Torre 2" />
             </div>
-            <div className="form-group half">
-              <label><ImageIcon size={14}/> URL Imagen</label>
-              <input name="imagenSrc" value={formData.imagenSrc} onChange={handleChange} />
+            <div className="course-input-group">
+                <label>Costo (0 = Gratis)</label>
+                <input type="number" name="costo" value={formData.costo} onChange={handleChange} />
             </div>
           </div>
 
-          <div className="modal-footer">
-            <button type="button" className="btn-cancel" onClick={onClose}>Cancelar</button>
-            <button type="submit" className="btn-save"><Save size={18}/> Publicar Curso</button>
+          <div className="course-input-group full-width">
+            <label>URL Imagen de Portada</label>
+            <input name="imagenSrc" value={formData.imagenSrc} onChange={handleChange} placeholder="https://..." />
           </div>
 
         </form>
+
+        {/* FOOTER */}
+        <div className="course-modal-footer">
+          <button type="button" className="btn-course-cancel" onClick={onClose}>Cancelar</button>
+          <button type="button" className="btn-course-save" onClick={(e) => handleSubmit(e as any)}>
+            <Save size={18}/> Publicar Curso
+          </button>
+        </div>
+
       </div>
     </div>
   );

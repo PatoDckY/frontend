@@ -1,0 +1,215 @@
+/* styles/admin/modals/NoticiaModal.css */
+
+:root {
+  --nm-azul: #0A3D62;
+  --nm-blanco: #FFFFFF;
+  --nm-borde: #E5E7EB;
+  --nm-texto: #334155;
+  --nm-bg-input: #F8FAFC;
+  --nm-rojo: #EF4444;
+  --nm-verde: #10B981;
+}
+
+/* --- OVERLAY --- */
+.noticia-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* --- CONTENEDOR --- */
+.noticia-modal-container {
+  background-color: var(--nm-blanco);
+  width: 100%;
+  max-width: 700px; /* Ancho ideal para editar texto/blog */
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* --- HEADER --- */
+.noticia-modal-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--nm-borde);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #FFFFFF;
+  border-radius: 16px 16px 0 0;
+}
+
+.noticia-modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--nm-azul);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.btn-close-noticia {
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  color: #94A3B8;
+  transition: all 0.2s;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-close-noticia:hover {
+  background-color: #FEF2F2;
+  color: var(--nm-rojo);
+  border-color: #FECACA;
+}
+
+/* --- FORMULARIO --- */
+.noticia-modal-form {
+  padding: 2rem;
+  overflow-y: auto;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--nm-texto);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--nm-borde);
+  border-radius: 10px;
+  background-color: var(--nm-bg-input);
+  font-size: 0.95rem;
+  color: var(--nm-texto);
+  outline: none;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  background-color: #fff;
+  border-color: var(--nm-azul);
+  box-shadow: 0 0 0 3px rgba(10, 61, 98, 0.1);
+}
+
+/* Grid para campos cortos */
+.form-row-noticia {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* --- FOOTER --- */
+.noticia-modal-footer {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--nm-borde);
+  background-color: #F8FAFC;
+  border-radius: 0 0 16px 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: auto;
+}
+
+.btn-noticia-cancel {
+  padding: 0.8rem 1.5rem;
+  border: 1px solid var(--nm-borde);
+  background: white;
+  color: var(--nm-texto);
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-noticia-cancel:hover {
+  background-color: #F1F5F9;
+}
+
+.btn-noticia-save {
+  padding: 0.8rem 2rem;
+  border: none;
+  background: var(--nm-azul);
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(10, 61, 98, 0.3);
+}
+
+.btn-noticia-save:hover {
+  background-color: #0F172A;
+  transform: translateY(-1px);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 640px) {
+  .form-row-noticia {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .noticia-modal-container {
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+  }
+  
+  .noticia-modal-footer {
+    flex-direction: column-reverse;
+  }
+  
+  .btn-noticia-save, .btn-noticia-cancel {
+    width: 100%;
+    justify-content: center;
+  }
+}

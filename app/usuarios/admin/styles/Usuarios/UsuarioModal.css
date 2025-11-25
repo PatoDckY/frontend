@@ -1,0 +1,217 @@
+/* styles/admin/modals/UsuarioModal.css */
+
+:root {
+  --um-azul: #0A3D62;
+  --um-blanco: #FFFFFF;
+  --um-borde: #E2E8F0;
+  --um-texto: #334155;
+  --um-bg-input: #F8FAFC;
+  --um-rojo: #EF4444;
+  --um-verde: #10B981;
+}
+
+/* --- OVERLAY --- */
+.usuario-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* --- CONTENEDOR --- */
+.usuario-modal-container {
+  background-color: var(--um-blanco);
+  width: 100%;
+  max-width: 500px; /* Más compacto para editar solo el rol */
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255,255,255,0.1);
+  overflow: hidden;
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* --- HEADER --- */
+.usuario-modal-header {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--um-borde);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #FFFFFF;
+}
+
+.usuario-modal-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--um-azul);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.btn-close-usuario {
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  color: #94A3B8;
+  transition: all 0.2s;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-close-usuario:hover {
+  background-color: #FEF2F2;
+  color: var(--um-rojo);
+  border-color: #FECACA;
+}
+
+/* --- FORMULARIO --- */
+.usuario-modal-form {
+  padding: 2rem;
+  overflow-y: auto;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-info-text {
+  font-size: 0.95rem;
+  color: #64748B;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  background-color: #F1F5F9;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--um-azul);
+}
+
+.form-info-text strong {
+  color: var(--um-azul);
+  display: block;
+  margin-top: 4px;
+  font-size: 1rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--um-texto);
+}
+
+/* Select Personalizado Grande */
+.role-select-large {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid var(--um-borde);
+  border-radius: 10px;
+  background-color: var(--um-blanco);
+  font-size: 1rem;
+  color: var(--um-texto);
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none; /* Quita la flecha por defecto en algunos navegadores */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.2rem;
+}
+
+.role-select-large:hover {
+  border-color: #CBD5E1;
+}
+
+.role-select-large:focus {
+  border-color: var(--um-azul);
+  box-shadow: 0 0 0 3px rgba(10, 61, 98, 0.1);
+}
+
+/* --- FOOTER --- */
+.usuario-modal-footer {
+  padding: 1.2rem 1.5rem;
+  border-top: 1px solid var(--um-borde);
+  background-color: #F8FAFC;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-usuario-cancel {
+  padding: 0.8rem 1.5rem;
+  border: 1px solid var(--um-borde);
+  background: white;
+  color: var(--um-texto);
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-usuario-cancel:hover {
+  background-color: #F1F5F9;
+}
+
+.btn-usuario-save {
+  padding: 0.8rem 2rem;
+  border: none;
+  background: var(--um-azul);
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(10, 61, 98, 0.3);
+}
+
+.btn-usuario-save:hover {
+  background-color: #0F172A;
+  transform: translateY(-1px);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 640px) {
+  .usuario-modal-footer {
+    flex-direction: column-reverse;
+  }
+  
+  .btn-usuario-save, .btn-usuario-cancel {
+    width: 100%;
+    justify-content: center;
+  }
+}

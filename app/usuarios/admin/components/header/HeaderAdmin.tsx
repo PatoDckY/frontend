@@ -5,7 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { 
   Menu, X, ShieldCheck, LayoutDashboard, 
-  Globe, Stethoscope, GraduationCap, FileText, Settings 
+  Globe, Stethoscope, GraduationCap, FileText, Settings, 
+  Users
 } from "lucide-react";
 import ProfileMenuAdmin from "../Profile/ProfileMenuAdmin"; 
 import "../../styles/header/HeaderAdmin.css"; 
@@ -68,7 +69,7 @@ export default function HeaderAdmin() {
             </Link>
 
             {/* Gestión de Contenido (Home, Nosotros, Servicios) */}
-            <Link href="/usuarios/admin/screens/GestionWeb" className="nav-link">
+            <Link href="/usuarios/admin/screens/Servicios" className="nav-link">
                <Globe size={18} /> Servicios
             </Link>
             
@@ -88,13 +89,12 @@ export default function HeaderAdmin() {
             </Link>
 
             {/* Gestión de Noticias */}
-            <Link href="/usuarios/admin/screens/GestionBlog" className="nav-link">
+            <Link href="/usuarios/admin/screens/blog" className="nav-link">
                <FileText size={18} /> Blog
             </Link>
 
-            {/* Configuración General (Logos, Nombres) */}
-            <Link href="/usuarios/admin/screens/Configuracion" className="nav-link">
-               <Settings size={18} /> Ajustes
+            <Link href="/usuarios/admin/screens/Usuarios" className="nav-link">
+               <Users size={18} /> Usuarios
             </Link>
 
           </nav>

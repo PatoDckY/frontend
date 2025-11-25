@@ -90,13 +90,13 @@
     gap: 20px; 
     align-items: center;
     flex: 1; /* Ocupa espacio disponible */
-    min-width: 300px;
+    min-width: 650px;
 }
 
 .search-input-wrapper {
     flex-grow: 1; /* El input crece para llenar el espacio */
     position: relative;
-    max-width: 400px; /* Limita el largo del input para que no sea enorme */
+    max-width: 650px; /* Limita el largo del input para que no sea enorme */
 }
 
 .search-icon {
@@ -108,7 +108,7 @@
 }
 
 .search-input-wrapper input {
-    width: 100%;
+    width: 80%;
     padding: 0.8rem 1rem 0.8rem 2.8rem;
     border: 1px solid var(--adm-borde);
     border-radius: 10px;

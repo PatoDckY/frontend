@@ -1,103 +1,119 @@
-// components/FooterClient.tsx
+// components/footer/FooterAdmin.tsx
+"use client"; // Necesario para el onClick preventDefault en links muertos
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
-  Phone, Mail, MapPin, Facebook, Instagram, Twitter, 
-  ChevronRight 
+  ShieldCheck, Server, Database, LifeBuoy, FileText, 
+  ChevronRight, Settings, Globe, Users, Stethoscope, GraduationCap
 } from 'lucide-react';
-import "../../../public/styles/footer/FooterPublico.css"; // Reutilizamos los estilos del footer público
+import "../../styles/footer/FooterAdmin.css"; 
 
-export default function FooterClient() {
+export default function FooterAdmin() {
   const currentYear = new Date().getFullYear();
 
+  // Función para enlaces que aún no funcionan
+  const handleDeadLink = (e: React.MouseEvent) => {
+    e.preventDefault();
+  };
+
   return (
-    <footer className="footer-publico">
+    <footer className="footer-admin">
       
       {/* --- SECCIÓN SUPERIOR --- */}
       <div className="footer-top">
         <div className="footer-container">
           
-          {/* Columna 1: Identidad */}
+          {/* Columna 1: Identidad Admin */}
           <div className="footer-col brand-col">
             <div className="footer-logo">
-               <Image src="/logo.png" alt="Logo Centro Médico Pichardo" width={50} height={50} />
-               <span className="footer-logo-text">Centro Médico Pichardo</span>
+               <Image src="/logo.png" alt="Logo Admin" width={45} height={45} />
+               <div className="logo-text-col">
+                   <span className="footer-logo-title">Centro Médico Pichardo</span>
+                   <span className="footer-logo-subtitle">Panel de Administración</span>
+               </div>
             </div>
             <p className="footer-description">
-              Gracias por confiar en nosotros. Seguimos comprometidos con la salud y el bienestar de su familia en cada etapa.
+              Plataforma de gestión de contenido. Acceso restringido solo a personal autorizado.
             </p>
-            <div className="social-links">
-              <a href="#" className="social-icon"><Facebook size={20} /></a>
-              <a href="#" className="social-icon"><Instagram size={20} /></a>
-              <a href="#" className="social-icon"><Twitter size={20} /></a>
+            <div className="admin-status">
+                <ShieldCheck size={16} className="status-icon" />
+                <span>Sistema Seguro</span>
             </div>
           </div>
 
-          {/* Columna 2: Navegación Cliente */}
+          {/* Columna 2: Gestión de Contenido (Rutas Reales) */}
           <div className="footer-col links-col">
-            <h4 className="footer-heading">Mi Cuenta</h4>
+            <h4 className="footer-heading">Administración Web</h4>
             <ul className="footer-menu">
               <li>
-                <Link href="/usuarios/client/screens/HomeClient">
-                  <ChevronRight size={16} /> Inicio / Mi Panel
+                <Link href="/usuarios/admin/screens/Dashboard">
+                  <ChevronRight size={16} /> Dashboard
                 </Link>
               </li>
               <li>
-                <Link href="/usuarios/client/screens/Citas">
-                  <ChevronRight size={16} /> Mis Citas
+                <Link href="/usuarios/admin/screens/GestionUsuarios">
+                  <Users size={16} /> Usuarios
                 </Link>
               </li>
               <li>
-                <Link href="/usuarios/public/screens/Servicios">
-                  <ChevronRight size={16} /> Servicios Médicos
+                <Link href="/usuarios/admin/screens/GestionDirectorio">
+                  <Stethoscope size={16} /> Directorio Médico
                 </Link>
               </li>
               <li>
-                <Link href="/usuarios/public/screens/DirectorioMedico">
-                  <ChevronRight size={16} /> Directorio
+                <Link href="/usuarios/admin/screens/GestionServicios">
+                  <Globe size={16} /> Servicios
+                </Link>
+              </li>
+              <li>
+                <Link href="/usuarios/admin/screens/GestionAcademia">
+                  <GraduationCap size={16} /> Academia & Cursos
+                </Link>
+              </li>
+              <li>
+                <Link href="/usuarios/admin/screens/GestionBlog">
+                  <FileText size={16} /> Blog de Noticias
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Columna 3: Aprendizaje */}
+          {/* Columna 3: Herramientas (Solo Visuales) */}
           <div className="footer-col links-col">
-            <h4 className="footer-heading">Academia & Recursos</h4>
+            <h4 className="footer-heading">Herramientas & Logs</h4>
             <ul className="footer-menu">
               <li>
-                <Link href="/usuarios/public/screens/Academia">
-                  <ChevronRight size={16} /> Academia Infantil
-                </Link>
+                <a href="#" onClick={handleDeadLink} style={{cursor: 'not-allowed', opacity: 0.7}}>
+                  <Database size={16} /> Registros del Sistema
+                </a>
               </li>
               <li>
-                <Link href="/usuarios/public/screens/CatalogoCursos">
-                  <ChevronRight size={16} /> Cursos Disponibles
-                </Link>
+                <a href="#" onClick={handleDeadLink} style={{cursor: 'not-allowed', opacity: 0.7}}>
+                  <Server size={16} /> Estado del Servidor
+                </a>
               </li>
               <li>
-                <Link href="/usuarios/public/screens/Blog">
-                  <ChevronRight size={16} /> Blog de Salud
-                </Link>
+                <a href="#" onClick={handleDeadLink} style={{cursor: 'not-allowed', opacity: 0.7}}>
+                  <Settings size={16} /> Configuración Avanzada
+                </a>
               </li>
             </ul>
           </div>
 
-          {/* Columna 4: Soporte */}
+          {/* Columna 4: Soporte Técnico */}
           <div className="footer-col contact-col">
-            <h4 className="footer-heading">Soporte al Paciente</h4>
+            <h4 className="footer-heading">Soporte IT</h4>
             <ul className="contact-list">
               <li>
-                <MapPin size={20} className="contact-icon" />
-                <span>Av. Benito Juárez S/N, Huejutla, Hgo.</span>
+                <LifeBuoy size={20} className="contact-icon" />
+                <span>¿Problemas con el panel?</span>
+              </li>
+              <li className="support-email">
+                <a href="mailto:soporte@cmpichardo.com">soporte@cmpichardo.com</a>
               </li>
               <li>
-                <Phone size={20} className="contact-icon" />
-                <span>(771) 123-4567</span>
-              </li>
-              <li>
-                <Mail size={20} className="contact-icon" />
-                <span>atencion@cmpichardo.com</span>
+                <span className="support-phone">Versión del Panel: 1.0.0</span>
               </li>
             </ul>
           </div>
@@ -109,13 +125,8 @@ export default function FooterClient() {
       <div className="footer-bottom">
         <div className="footer-container bottom-flex">
           <p className="copyright-text">
-            © {currentYear} Centro Médico Pichardo. Portal de Pacientes.
+            © {currentYear} Centro Médico Pichardo. Todos los derechos reservados.
           </p>
-          <div className="legal-links">
-            <Link href="/privacidad">Privacidad</Link>
-            <span className="separator">|</span>
-            <Link href="/terminos">Términos</Link>
-          </div>
         </div>
       </div>
     </footer>

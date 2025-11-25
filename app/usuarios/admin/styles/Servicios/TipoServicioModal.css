@@ -1,0 +1,141 @@
+/* styles/admin/modals/TipoServicioModal.css */
+
+:root {
+  --ts-azul: #0A3D62;
+  --ts-blanco: #FFFFFF;
+  --ts-borde: #E2E8F0;
+  --ts-hover: #F1F5F9;
+  --ts-acento: #FFC300;
+}
+
+.tipo-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.tipo-modal-container {
+  background-color: var(--ts-blanco);
+  width: 100%;
+  max-width: 700px;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  position: relative;
+}
+
+.btn-close-absolute {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94A3B8;
+  transition: color 0.2s;
+}
+
+.btn-close-absolute:hover { color: #EF4444; }
+
+.tipo-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ts-azul);
+  margin-bottom: 0.5rem;
+}
+
+.tipo-subtitle {
+  color: #64748B;
+  margin-bottom: 2rem;
+}
+
+/* GRID DE SELECCIÓN */
+.selection-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.selection-card {
+  border: 2px solid var(--ts-borde);
+  border-radius: 16px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+}
+
+.selection-card:hover {
+  border-color: var(--ts-azul);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(10, 61, 98, 0.1);
+  background-color: var(--ts-hover);
+}
+
+/* REPRESENTACIÓN VISUAL (Iconos CSS) */
+.visual-preview {
+  background-color: #E2E8F0;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Preview Vertical */
+.visual-preview.vertical {
+  width: 80px;
+  height: 120px;
+}
+.visual-preview.vertical::before { /* Imagen simulada */
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 50%;
+  background-color: var(--ts-azul);
+}
+.visual-preview.vertical::after { /* Texto simulado */
+  content: ''; position: absolute; bottom: 10px; left: 10px; width: 60%; height: 6px;
+  background-color: #CBD5E1; border-radius: 4px;
+  box-shadow: 0 -10px 0 #CBD5E1;
+}
+
+/* Preview Horizontal */
+.visual-preview.horizontal {
+  width: 140px;
+  height: 70px;
+}
+.visual-preview.horizontal::before { /* Imagen simulada a la izquierda */
+  content: ''; position: absolute; top: 0; left: 0; width: 40%; height: 100%;
+  background-color: var(--ts-azul);
+}
+.visual-preview.horizontal::after { /* Texto simulado a la derecha */
+  content: ''; position: absolute; top: 20px; right: 10px; width: 40%; height: 6px;
+  background-color: #CBD5E1; border-radius: 4px;
+  box-shadow: 0 10px 0 #CBD5E1;
+}
+
+/* Textos de la tarjeta */
+.card-label {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--ts-azul);
+  margin-bottom: 0.5rem;
+}
+
+.card-desc {
+  font-size: 0.85rem;
+  color: #64748B;
+  line-height: 1.4;
+}
+
+@media (max-width: 600px) {
+  .selection-grid { grid-template-columns: 1fr; }
+}

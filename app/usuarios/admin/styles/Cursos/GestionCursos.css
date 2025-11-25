@@ -97,7 +97,6 @@
 .search-input-wrapper {
     position: relative;
     flex: 1 1 300px; /* Flexible pero con base sólida */
-    min-width: 250px; /* Nunca menos de esto */
 }
 
 .search-icon {
