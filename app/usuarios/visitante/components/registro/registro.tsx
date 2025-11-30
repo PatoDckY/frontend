@@ -87,7 +87,7 @@ export default function RegistroPublico() {
         {/* Nuevo envoltorio para efecto sticky */}
         <div className="marketing-content-fixed">
             <div className="illustration-wrapper">
-                <Image src="/niños.png" alt="Ilustración" width={350} height={350} className="illustration-register" priority />
+                <Image src="/logo.png" alt="Ilustración" width={350} height={350} className="illustration-register" priority />
             </div>
             <h1 className="marketing-tagline">Centro Médico Pichardo</h1>
 
