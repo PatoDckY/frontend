@@ -1,351 +1,196 @@
-/* --- Variables de Color (Azul/Amarillo) --- */
+/* styles/registro/registro.css */
+
 :root {
-    --color-blanco: #FFFFFF;
-    --color-azul-marino: #0A3D62; /* Dark Blue - Color principal de marca */
-    --color-azul-claro: #74B9FF; /* Light Blue - Acento secundario */
-    --color-amarillo-vibrante: #FFC300; /* Vibrant Yellow - Botón principal */
-    --color-naranja-calido: #FF8800; /* Warm Orange - Hover y enlaces */
-    
-    /* Colores neutrales y de estado */
-    --color-gris-texto: #6B7280;
-    --color-gris-borde: #E5E7EB;
-    --color-error: #E74C3C;
-    --color-success: #2ECC71;
-    --texto-base: 1rem;
-    --texto-chico: 0.875rem;
+  --color-blanco: #FFFFFF;
+  --color-azul-marino: #0A3D62;       
+  --color-amarillo-vibrante: #FFC300; 
+  --color-naranja-calido: #FF8800;    
+  --color-texto: #1F2937;
+  --color-gris-claro: #F3F4F6; 
+  --color-gris-icono: #9CA3AF;
+  --color-error: #EF4444;
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background-color: #F4F7F6; 
+/* 1. PERMITIR SCROLL EN LA PÁGINA COMPLETA */
+body, html { 
+  margin: 0; padding: 0; 
+  width: 100%;
+  min-height: 100%; /* Asegura altura mínima pero deja crecer */
+  font-family: 'Inter', sans-serif; 
+  background: var(--color-blanco); 
+  overflow-x: hidden; /* Solo evitamos scroll lateral */
+  overflow-y: auto;   /* Scroll vertical ACTIVADO */
 }
 
-/* --- CONTENEDOR PRINCIPAL: Layout de Pantalla Completa --- */
+/* --- CONTENEDOR PRINCIPAL --- */
 .registro-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px 0;
+  display: flex;
+  width: 100%;
+  /* Altura mínima de la pantalla, pero crece si el contenido lo empuja */
+  min-height: 100vh; 
 }
 
-/* --- CONTENIDO PRINCIPAL: Contenedor del Layout de Dos Columnas --- */
-.registro-content {
-    display: flex;
-    width: 90%;
-    max-width: 1100px; 
-    min-height: 700px; 
-    background-color: var(--color-blanco);
-    border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-    position: relative;
-    overflow: hidden;
-}
-
-/* --- 1. SECCIÓN DE ILUSTRACIÓN/MARKETING (Izquierda) --- */
+/* --- IZQUIERDA (AZUL) --- */
 .marketing-section {
-    background-color: var(--color-azul-marino); 
-    color: var(--color-blanco);
-    padding: 3rem;
-    width: 40%;
-    position: relative;
-    overflow: hidden;
-    /* Usamos Flexbox para centrar todo */
-    display: flex; 
-    flex-direction: column;
-    justify-content: center; /* Centrado vertical principal */
-    align-items: center; 
-    text-align: center; 
-    gap: 2rem; /* Espacio entre el texto y la imagen */
+  flex: 1; /* 50% ancho */
+  /* Se estirará automáticamente para igualar la altura del formulario */
+  background: linear-gradient(160deg, #0A3D62 60%, #74B9FF 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: var(--color-blanco);
+  position: relative;
 }
 
-/* *CAMBIO*: Eliminamos el estilo del logo box ya que fue quitado */
-.logo-box {
-    display: none;
+/* Para que el contenido azul se mantenga visible al hacer scroll (Opcional, efecto pegajoso) */
+/* Si no te gusta que el cerebro te siga, borra este bloque .marketing-content-fixed */
+.marketing-content-fixed {
+  position: sticky;
+  top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.marketing-section::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: -50px; 
-    bottom: 0;
-    width: 100px; 
-    background-color: var(--color-blanco);
-    transform: skewX(-5deg); 
-    z-index: 1;
+.marketing-section::before {
+    content: ''; position: absolute; width: 150%; height: 150%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none;
 }
 
-/* *CAMBIO*: Tamaño de fuente aumentado a 2rem */
-.marketing-tagline {
-    font-size: 2rem; 
-    font-weight: 500;
-    line-height: 1.5;
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    color: var(--color-blanco);
-}
-
-.marketing-tagline strong {
-    font-weight: 700;
-    color: var(--color-azul-claro); 
-}
-
-/* Contenedor de la ilustración */
 .illustration-wrapper {
-    position: relative; 
-    z-index: 3;
-    /* *CAMBIO*: Aseguramos que sea circular */
-    border-radius: 50%; 
-    overflow: hidden;
-    width: 350px; 
-    height: 350px; 
-    
-    /* Centrado en el flujo Flexbox */
-    margin: 0; 
-    
-    /* Sombra para efecto 3D/salida */
-    box-shadow: 0 15px 15px rgba(0, 0, 0, 0.4); 
+  margin-bottom: 1.5rem;
+  z-index: 2;
+  animation: float 6s ease-in-out infinite;
+  max-width: 350px;
+  display: flex;
+  justify-content: center;
 }
 
-.illustration-register { 
-    /* *CAMBIO*: La imagen ocupa todo el contenedor circular */
-    width: 100%; 
-    height: 100%;
-    object-fit: cover; /* Recortar la imagen para que llene el círculo */
-    
-    /* Quitamos el filtro/transformación de la imagen ya que la sombra va en el wrapper */
-    filter: none;
-    transform: none;
-    transition: none;
+.illustration-register {
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 25px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  object-fit: contain;
+  width: 300px;
+  height: 300px;
 }
 
+@keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
 
-/* --- 2. CARD DEL FORMULARIO DE REGISTRO (Derecha) --- */
+.marketing-tagline {
+  font-size: 2.2rem; font-weight: 800; text-align: center; letter-spacing: 1px; 
+  margin-bottom: 2.5rem; z-index: 2; color: #FFFFFF !important;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+/* BOTONES LATERALES */
+.side-nav-buttons {
+    display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 300px; z-index: 2;
+}
+
+.side-btn {
+    padding: 14px; border-radius: 50px; font-weight: 800; text-align: center; text-decoration: none; transition: all 0.3s ease; cursor: pointer; letter-spacing: 1px; font-size: 0.95rem; display: block;
+}
+
+.side-btn.active {
+    background-color: var(--color-blanco); color: var(--color-azul-marino);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2); transform: scale(1.05);
+}
+
+.side-btn.outline {
+    border: 2px solid rgba(255, 255, 255, 0.6); color: #FFFFFF !important; background-color: transparent;
+}
+.side-btn.outline:hover { 
+    background-color: rgba(255, 255, 255, 0.1); border-color: #FFFFFF; transform: translateY(-2px);
+}
+
+/* --- DERECHA (BLANCO - SIN SCROLL INTERNO, CRECE CON LA PAGINA) --- */
 .registro-card {
-    background: var(--color-blanco);
-    padding: 3rem 4rem;
-    width: 60%;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; 
+  flex: 1; /* 50% ancho */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-blanco);
+  padding: 60px 40px; /* Padding generoso arriba y abajo */
+  height: auto; /* Deja que crezca según el contenido */
 }
+
+.registro-form { width: 100%; max-width: 500px; }
 
 .title-form {
-    color: var(--color-azul-marino);
-    font-size: 1.8rem;
-    margin-bottom: 2rem; 
-    font-weight: 700;
-    text-align: center;
+  font-size: 1.8rem; font-weight: 800; color: var(--color-azul-marino); 
+  margin-top: 0; margin-bottom: 1rem; text-align: center;
 }
 
-/* Botones Sociales */
-.social-login {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
+/* --- SECCIÓN SOCIAL --- */
+.social-section { text-align: center; margin-bottom: 1rem; margin-top: 2rem; }
+
+.social-label {
+    font-size: 0.85rem; color: var(--color-gris-icono); font-weight: 400;
+    margin-bottom: 0.8rem; display: block;
 }
+
+.social-buttons-row { display: flex; gap: 20px; justify-content: center; }
 
 .btn-social {
-    flex: 1;
-    padding: 0.75rem;
-    border-radius: 6px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: var(--texto-base);
-    background-color: var(--color-blanco);
-    border: 1px solid var(--color-gris-borde);
-    color: var(--color-azul-marino); 
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px;
+  border-radius: 12px; border: 1px solid #E5E7EB; background: var(--color-blanco); color: var(--color-texto);
+  font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
 }
+.btn-social:hover { background-color: #F9FAFB; border-color: var(--color-azul-marino); transform: translateY(-2px); }
+.icon-social { width: 18px; height: 18px; }
 
-.btn-social:hover {
-    background-color: #F8F8F8;
+/* Separador */
+.separator-or { 
+    text-align: center; color: var(--color-gris-icono); font-size: 0.8rem; margin: 1.2rem 0; position: relative; 
 }
-
-.icon-social {
-    width: 20px;
-    height: 20px;
-    margin-right: 8px;
+.separator-or::before, .separator-or::after { 
+    content: ""; position: absolute; top: 50%; width: 40%; height: 1px; background-color: #E5E7EB; 
 }
+.separator-or::before { left: 0; } .separator-or::after { right: 0; }
 
-.separator-or {
-    text-align: center;
-    color: var(--color-gris-texto);
-    margin: 1rem 0 1.5rem 0;
-    font-size: var(--texto-chico);
-    position: relative;
+/* Inputs */
+.form-group { margin-bottom: 1rem; }
+.form-row { display: flex; gap: 12px; margin-bottom: 1rem; }
+.form-group.half { flex: 1; margin-bottom: 0; }
+
+.input-with-icon-wrapper { position: relative; display: flex; align-items: center; }
+.input-icon-left { position: absolute; left: 15px; color: var(--color-gris-icono); pointer-events: none; width: 18px; }
+
+.form-group input, .form-group select {
+  width: 100%; padding: 12px 15px 12px 42px; border: 1px solid transparent; border-radius: 10px; 
+  background-color: var(--color-gris-claro); font-size: 0.95rem; color: var(--color-texto); outline: none; transition: all 0.2s;
 }
-
-.separator-or::before,
-.separator-or::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    width: 40%;
-    height: 1px;
-    background-color: var(--color-gris-borde);
+.form-group select { appearance: none; cursor: pointer; }
+.form-group input:focus, .form-group select:focus {
+    background-color: var(--color-blanco); box-shadow: 0 0 0 2px var(--color-azul-marino);
 }
+.input-error { box-shadow: 0 0 0 2px #EF4444 !important; background-color: #FEF2F2 !important; }
+.error { color: #EF4444; font-size: 0.75rem; margin-top: 3px; margin-left: 4px; display: block; font-weight: 500; }
+.icon-eye-right { position: absolute; right: 15px; color: var(--color-gris-icono); cursor: pointer; width: 18px; }
 
-.separator-or::before {
-    left: 0;
-}
-
-.separator-or::after {
-    right: 0;
-}
-
-/* --- FORMULARIO Y CAMPOS ESPECÍFICOS DE REGISTRO --- */
-
-.registro-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem; 
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 0.5rem; 
-}
-
-.form-row {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 0.5rem;
-}
-
-.form-row .form-group.half {
-    flex: 1; 
-    margin-bottom: 0;
-}
-
-.form-group label {
-    display: none; 
-}
-
-.form-group input,
-.form-group select {
-    width: 100%;
-    padding: 1rem 1.25rem;
-    border-radius: 8px;
-    border: 1px solid var(--color-gris-borde);
-    font-size: var(--texto-base);
-    outline: none;
-    transition: border-color 0.2s;
-    color: var(--color-azul-marino);
-}
-
-.form-group input:focus,
-.form-group select:focus {
-    border-color: var(--color-azul-claro);
-}
-
-.password-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.icon-eye {
-    position: absolute;
-    right: 1.25rem;
-    cursor: pointer;
-    color: var(--color-gris-texto);
-}
-
-/* Estados de validación */
-.input-success {
-    border-color: var(--color-success);
-}
-
-.error {
-    font-size: 0.8rem;
-    margin-top: 0.2rem;
-    color: var(--color-error);
-    font-weight: 500;
-}
-
-/* --- Botón Principal --- */
+/* Botón Submit */
 .btn-submit {
-    width: 100%;
-    padding: 1rem;
-    background-color: var(--color-amarillo-vibrante);
-    color: var(--color-azul-marino);
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1.05rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 1rem;
+  width: 100%; padding: 14px; background-color: var(--color-amarillo-vibrante); color: var(--color-azul-marino);
+  border: none; border-radius: 30px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.2s;
+  margin-top: 1.2rem; box-shadow: 0 4px 15px rgba(255, 195, 0, 0.3);
 }
+.btn-submit:hover { transform: translateY(-2px); background-color: #FFD700; }
+.btn-submit:disabled { background-color: #E5E7EB; color: #9CA3AF; cursor: not-allowed; }
 
-.btn-submit:hover {
-    background-color: var(--color-naranja-calido); 
-    color: var(--color-blanco);
-}
+.login-link { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--color-gris-icono); }
+.login-link .link { color: var(--color-azul-marino); font-weight: 700; text-decoration: none; margin-left: 5px; }
+.login-link .link:hover { text-decoration: underline; }
 
-/* --- Enlace a Login --- */
-.login-link {
-    text-align: center;
-    margin-top: 1.5rem;
-    font-size: var(--texto-chico);
-    color: var(--color-azul-marino);
-}
-
-.login-link .link {
-    color: var(--color-naranja-calido);
-    font-weight: 600;
-    text-decoration: none;
-}
-
-.login-link .link:hover {
-    text-decoration: underline;
-    color: var(--color-amarillo-vibrante);
-}
-
-/* --- Media Queries (Responsividad) --- */
-@media (max-width: 992px) {
-    .registro-content {
-        flex-direction: column;
-        min-height: auto;
-        width: 90%;
-    }
-
-    .marketing-section {
-        width: 100%;
-        min-height: 200px;
-        padding: 2rem;
-        align-items: center; 
-        gap: 1rem; /* Reducir espacio en móvil */
-    }
-    
-    .marketing-section::after {
-        display: none; 
-    }
-    
-    .marketing-tagline {
-        font-size: 1.5rem; /* Ajuste para móvil */
-    }
-
-    .illustration-wrapper {
-        display: none; /* Ocultar en móvil */
-    }
-
-    .registro-card {
-        width: 100%;
-        padding: 2rem;
-    }
-    
-    .form-row {
-        flex-direction: column;
-        gap: 0;
-    }
+/* Responsive */
+@media (max-width: 900px) {
+  .registro-container { flex-direction: column; }
+  .marketing-section { display: none; }
+  .registro-card { width: 100%; padding: 40px 20px; }
 }

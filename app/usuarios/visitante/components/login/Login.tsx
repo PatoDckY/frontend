@@ -3,222 +3,177 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Eye, EyeOff } from "lucide-react";
-import axios from "axios"; // Importamos Axios
-import { toast } from "react-toastify"; // Importamos Toastify
+// Agregamos Mail y Lock para los inputs
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import axios from "axios"; 
+import { toast } from "react-toastify"; 
 import "../../styles/login/LoginPub.css"; 
 
-// Definiciones de Tipos
-type LoginData = {
-  correo: string;
-  contrasena: string;
-};
-
+type LoginData = { correo: string; contrasena: string; };
 type Errores = Partial<Record<keyof LoginData, string>>;
 
 export default function LoginPublico() {
   const router = useRouter();
-  
-  // Estados
-  const [loginData, setLoginData] = useState<LoginData>({
-    correo: "",
-    contrasena: "",
-  });
+  const [loginData, setLoginData] = useState<LoginData>({ correo: "", contrasena: "" });
   const [errores, setErrores] = useState<Errores>({});
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
   const [cargando, setCargando] = useState(false);
 
-  // Manejo de cambios en los inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setLoginData({ ...loginData, [name]: value });
-    // Limpiamos errores visuales al escribir
-    if (errores[name as keyof LoginData]) {
-      setErrores({ ...errores, [name]: "" });
-    }
+    if (errores[name as keyof LoginData]) setErrores({ ...errores, [name]: "" });
   };
 
-  const validarFormulario = () => {
-    const nuevosErrores: Errores = {};
-    if (!loginData.correo) nuevosErrores.correo = "El correo es obligatorio";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginData.correo)) nuevosErrores.correo = "Correo inválido";
-    
-    if (!loginData.contrasena) nuevosErrores.contrasena = "La contraseña es obligatoria";
-
-    setErrores(nuevosErrores);
-    return Object.keys(nuevosErrores).length === 0;
-  };
-
-  // Lógica de Inicio de Sesión (Funcional)
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+      e.preventDefault();
+      const nuevosErrores: Errores = {};
+      if (!loginData.correo) nuevosErrores.correo = "Ingresa tu correo";
+      if (!loginData.contrasena) nuevosErrores.contrasena = "Ingresa tu contraseña";
+      
+      if (Object.keys(nuevosErrores).length > 0) { setErrores(nuevosErrores); return; }
 
-    if (!validarFormulario()) {
-      toast.error("Por favor corrige los errores.");
-      return;
-    }
+      try {
+        setCargando(true);
 
-    try {
-      setCargando(true);
+        // 1️⃣ CAMBIO DE URL: Usamos la ruta local de Next.js
+        const res = await axios.post("/api/auth/login", loginData);
+        
+        const { token, usuario } = res.data;
 
-      const res = await axios.post(
-        "https://backend-7nyf.onrender.com/auth/login",
-        loginData
-      );
+        // 2️⃣ CORRECCIÓN DEL ROL: 
+        // En el backend nuevo, usuario.rol ya es un string (ej: "Administrador"), 
+        // no un objeto. Quitamos el ".nombre".
+        const nombreRol = typeof usuario.rol === 'string' ? usuario.rol : usuario.rol?.nombre;
+        const rol = nombreRol?.toLowerCase() ?? "cliente";
 
-      const token = res.data.token;
-      const rol = res.data.usuario?.rol?.nombre?.toLowerCase() ?? "cliente";
+        if (!token) { toast.error("Error de servidor"); return; }
+        
+        // Guardamos en localStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("rol", rol);
+        // Opcional: Guardar datos del usuario para mostrar "Hola Juan" en el dashboard
+        localStorage.setItem("usuario", JSON.stringify(usuario)); 
+        
+        toast.success(`Bienvenido, ${usuario.nombre}`);
 
+        // Redirección
+        setTimeout(() => {
+          // Asegúrate que tu rol en BD se llame "administrador" o "admin"
+          // .includes permite detectar "Administrador" o "Admin"
+          if (rol.includes("admin")) {
+              router.push("/usuarios/admin/screens/Dashboard");
+          } else {
+              router.push("/usuarios/public/screens/HomePublico");
+          }
+        }, 1000);
 
-
-      if (!token) {
-        toast.error("Error: No se recibió el token de seguridad.");
-        return;
-      }
-
-      // Guardamos token y rol
-      localStorage.setItem("token", token);
-      localStorage.setItem("rol", rol);
-
-      toast.success(res.data.mensaje || "¡Bienvenido!");
-
-      // Redirección según rol
-      setTimeout(() => {
-        if (rol === "admin") {
-          router.push("/admin/HomeAdmin");
+      } catch (error: any) {
+        console.error("Error login:", error);
+        if (error.response?.status === 401) {
+            toast.error("Credenciales incorrectas");
         } else {
-          router.push("/usuarios/public/screens/HomePublico");
+            // Muestra el mensaje real del backend si es otro error
+            toast.error(error.response?.data?.message || "Error de conexión");
         }
-      }, 1200);
-
-    } catch (error: any) {
-      console.error("Error de login:", error);
-
-      if (error.response?.status === 401) {
-        toast.error("Correo o contraseña incorrectos.");
-      } else if (error.response?.status === 404) {
-        toast.error("El usuario no existe.");
-      } else {
-        toast.error("Error de conexión. Intente más tarde.");
-      }
-
-    } finally {
-      setCargando(false);
-    }
-  };
-
+      } finally {
+        setCargando(false);
+      }
+    };
 
   return (
     <div className="login-container">
-      <div className="login-content">
-        
-        {/* 1. Sección Lateral de Marketing (Izquierda) */}
-        <div className="marketing-section">
-          <div className="logo-box">
-            <div className="logo-icon"></div> 
-          </div>
-          
-          <h1 className="marketing-tagline">
-            Centro Médico Pichardo
-          </h1>
-          
-          <div className="illustration-wrapper">
-            <Image 
-              src="/brains.png" 
-              alt="Ilustración 3D del Cerebro"
-              width={350}
-              height={350}
-              className="illustration-stethoscope"
-              priority // Carga prioritaria para la imagen principal
-            />
-          </div>
+      
+      {/* --- IZQUIERDA: AZUL CON TEXTO BLANCO Y BOTONES --- */}
+      <div className="marketing-section">
+        <div className="illustration-wrapper">
+          <Image src="/brains.png" alt="Cerebro" width={350} height={350} style={{objectFit: 'contain'}} priority />
         </div>
+        <h1 className="marketing-tagline">Centro Médico Pichardo</h1>
+        
+        {/* Botones laterales estilo Nike */}
+        <div className="side-nav-buttons">
+            <div className="side-btn active">INICIAR SESIÓN</div>
+            <Link href="/usuarios/visitante/screens/Registro" className="side-btn outline">
+                REGISTRARSE
+            </Link>
+        </div>
+      </div>
 
-        {/* 2. Sección del Formulario (Derecha) */}
-        <div className="login-card">
-          
-          {/* Opciones de idioma (Solo visual) */}
-          <div className="language-selector">
-              <span>Español</span>
-          </div>
-          
-          <h2 className="title-form">Iniciar Sesión</h2>
-          
-          {/* Botones Sociales (Solo visuales, type="button" para no enviar form) */}
-          <div className="social-login">
-            <button type="button" className="btn-social google">
-              <svg className="icon-social" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.61 20.087a1.996 1.996 0 0 0-.25-1.05H24v4.71h10.94a12.44 12.44 0 0 1-5.18 7.39l.01 4.39 3.55.01c2.16-2.02 3.4-4.88 3.4-7.89 0-.49-.05-.98-.14-1.46z"/><path fill="#4CAF50" d="M24 44c5.16 0 9.88-1.97 13.43-5.22l-3.56-4.38c-1.92 1.44-4.36 2.29-6.9 2.29-5.26 0-9.75-3.54-11.36-8.32l-4.49 3.51c2.09 5.17 7.21 8.8 13.52 8.8z"/><path fill="#1976D2" d="M12.64 29.83c-.32-1.3-.5-2.7-.5-4.14s.18-2.84.5-4.14l-4.49-3.51C6.03 19.34 5 21.6 5 24c0 2.4.99 4.66 2.15 6.48l4.49-3.51z"/><path fill="#E53935" d="M24 15.07c2.86 0 5.43 1.01 7.42 2.9l4.15-4.15C33.87 9.82 29.28 8 24 8c-6.31 0-11.43 3.63-13.52 8.8l4.49 3.51c1.61-4.78 6.1-8.32 11.36-8.32z"/></svg>
-              Ingresar con Google
-            </button>
-            <button type="button" className="btn-social facebook">
-              <svg className="icon-social" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1877F2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-              Ingresar con Facebook
-            </button>
-          </div>
-          
-          <div className="separator-or">- O -</div>
-          
-          {/* Formulario Funcional */}
-          <form className="login-form" onSubmit={handleSubmit}>
+      {/* --- DERECHA: FORMULARIO BLANCO --- */}
+      <div className="login-card">
+        <div className="form-wrapper">
             
-            {/* Campo de Correo Electrónico */}
+          {/* Logo y Título arriba */}
+          <div className="form-header-logo">
+             <Image src="/logo.png" width={60} height={60} alt="Logo CMP" />
+             <h2 className="title-form">Bienvenido</h2>
+          </div>
+
+          {/* Botones Sociales */}
+          <div className="social-login">
+            <button type="button" className="btn-social">
+               <svg className="icon-social" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.61 20.087a1.996 1.996 0 0 0-.25-1.05H24v4.71h10.94a12.44 12.44 0 0 1-5.18 7.39l.01 4.39 3.55.01c2.16-2.02 3.4-4.88 3.4-7.89 0-.49-.05-.98-.14-1.46z"/><path fill="#4CAF50" d="M24 44c5.16 0 9.88-1.97 13.43-5.22l-3.56-4.38c-1.92 1.44-4.36 2.29-6.9 2.29-5.26 0-9.75-3.54-11.36-8.32l-4.49 3.51c2.09 5.17 7.21 8.8 13.52 8.8z"/><path fill="#1976D2" d="M12.64 29.83c-.32-1.3-.5-2.7-.5-4.14s.18-2.84.5-4.14l-4.49-3.51C6.03 19.34 5 21.6 5 24c0 2.4.99 4.66 2.15 6.48l4.49-3.51z"/><path fill="#E53935" d="M24 15.07c2.86 0 5.43 1.01 7.42 2.9l4.15-4.15C33.87 9.82 29.28 8 24 8c-6.31 0-11.43 3.63-13.52 8.8l4.49 3.51c1.61-4.78 6.1-8.32 11.36-8.32z"/></svg>
+               Google
+            </button>
+            <button type="button" className="btn-social">
+               <svg className="icon-social" viewBox="0 0 24 24" fill="#1877F2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+               Facebook
+            </button>
+          </div>
+          
+          <div className="separator-or">o ingresa con tu correo</div>
+
+          <form onSubmit={handleSubmit}>
+            {/* Input Correo con Icono */}
             <div className="form-group">
-              <input
-                type="email"
-                name="correo"
-                placeholder="Correo Electrónico"
-                value={loginData.correo}
-                onChange={handleChange}
-                className={errores.correo ? "input-error" : ""}
-              />
+              <label>Correo Electrónico</label>
+              <div className="input-with-icon-wrapper">
+                  <Mail className="input-icon-left" size={20} />
+                  <input
+                    type="email"
+                    name="correo"
+                    placeholder="nombre@ejemplo.com"
+                    value={loginData.correo}
+                    onChange={handleChange}
+                    className={errores.correo ? "input-error" : ""}
+                  />
+              </div>
               {errores.correo && <span className="error">{errores.correo}</span>}
             </div>
 
-            {/* Campo de Contraseña */}
-            <div className="form-group password-group">
-              <div className="password-wrapper">
+            {/* Input Contraseña con Icono y Toggle */}
+            <div className="form-group">
+              <label>Contraseña</label>
+              <div className="input-with-icon-wrapper">
+                <Lock className="input-icon-left" size={20} />
                 <input
                   type={mostrarContrasena ? "text" : "password"}
                   name="contrasena"
-                  placeholder="Contraseña"
+                  placeholder="••••••••"
                   value={loginData.contrasena}
                   onChange={handleChange}
                   className={errores.contrasena ? "input-error" : ""}
+                  style={{paddingRight: '45px'}} // Espacio extra para el ojo
                 />
-                <span
-                  className="icon-eye"
-                  onClick={() => setMostrarContrasena(!mostrarContrasena)}
-                >
+                <span className="icon-eye-right" onClick={() => setMostrarContrasena(!mostrarContrasena)}>
                   {mostrarContrasena ? <EyeOff size={20} /> : <Eye size={20} />}
                 </span>
               </div>
               {errores.contrasena && <span className="error">{errores.contrasena}</span>}
             </div>
-            
-            {/* Enlace de Olvidé Contraseña (Visual) */}
+
             <div className="forgot-password">
-              <span 
-                className="link" 
-                style={{cursor: 'pointer', color: 'var(--color-naranja-calido)'}}
-                onClick={() => router.push("/usuarios/public/screens/EnlaceMagico")}
-              >
+              <Link href="/usuarios/public/screens/EnlaceMagico" className="link-olvide">
                 ¿Olvidaste tu contraseña?
-              </span>
+              </Link>
             </div>
 
-            {/* Botón Principal (Submit) */}
             <button type="submit" className="btn-submit" disabled={cargando}>
-              {cargando ? "Verificando..." : "Iniciar Sesión"}
+              {cargando ? "AUTENTICANDO..." : "ENTRAR AHORA"}
             </button>
-            
-            {/* Enlace de Registro */}
-            <p className="registro-link">
-              ¿No tienes una cuenta?{" "}
-              <Link href="/usuarios/visitante/screens/Registro" className="link">
-                Regístrate
-              </Link>
-            </p>
           </form>
+
         </div>
       </div>
     </div>

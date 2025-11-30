@@ -1,360 +1,160 @@
-/* --- Variables de Color (Azul/Amarillo) --- */
+/* styles/login/LoginPub.css */
+
 :root {
-    --color-blanco: #FFFFFF;
-    --color-azul-marino: #0A3D62; /* Dark Blue - Color principal de marca */
-    --color-azul-claro: #74B9FF; /* Light Blue - Acento secundario */
-    --color-amarillo-vibrante: #FFC300; /* Vibrant Yellow - Botón principal */
-    --color-naranja-calido: #FF8800; /* Warm Orange - Hover y enlaces */
-    
-    /* Colores neutrales y de estado */
-    --color-gris-texto: #6B7280;
-    --color-gris-borde: #E5E7EB;
-    --color-error: #E74C3C;
-    --color-success: #2ECC71;
-    --texto-base: 1rem;
-    --texto-chico: 0.875rem;
+  /* TU PALETA DE COLORES */
+  --color-blanco: #FFFFFF;
+  --color-azul-marino: #0A3D62;       
+  --color-amarillo-vibrante: #FFC300; 
+  --color-naranja-calido: #FF8800;    
+  --color-texto: #1F2937;
+  --color-gris-claro: #F3F4F6; /* Para fondo de inputs */
+  --color-gris-icono: #9CA3AF;
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background-color: #F4F7F6; 
-}
+body, html { margin: 0; padding: 0; height: 100%; font-family: 'Inter', sans-serif; background: var(--color-blanco); }
 
-/* --- CONTENEDOR PRINCIPAL: Layout de Pantalla Completa --- */
+/* --- CONTENEDOR PRINCIPAL SPLIT SCREEN --- */
 .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px 0;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
-/* --- CONTENIDO PRINCIPAL: Contenedor del Layout de Dos Columnas --- */
-.login-content {
-    display: flex;
-    width: 90%;
-    max-width: 1000px; 
-    min-height: 600px;
-    background-color: var(--color-blanco);
-    border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-    position: relative;
-    overflow: hidden;
-}
-
-/* --- 1. SECCIÓN DE ILUSTRACIÓN/MARKETING (Izquierda) --- */
+/* --- SECCIÓN IZQUIERDA (AZUL) --- */
 .marketing-section {
-    background-color: var(--color-azul-marino); 
-    color: var(--color-blanco);
-    padding: 3rem;
-    width: 40%;
-    position: relative;
-    overflow: hidden;
-    /* *CAMBIO*: Flex para centrar el contenido vertical y horizontalmente */
-    display: flex; 
-    flex-direction: column;
-    justify-content: space-around; /* Distribuye espacio */
-    align-items: center; /* Centrado horizontal */
-    text-align: center; 
+  flex: 1; /* 50% ancho */
+  background: linear-gradient(160deg, #0A3D62 60%, #74B9FF 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: var(--color-blanco); /* TEXTO BLANCO */
+  position: relative;
 }
 
-/* Diseño de curva (imitando la imagen) */
-.marketing-section::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: -50px; 
-    bottom: 0;
-    width: 100px; 
-    background-color: var(--color-blanco);
-    transform: skewX(-5deg); 
-    z-index: 1;
+/* Elemento decorativo de fondo */
+.marketing-section::before {
+    content: ''; position: absolute; width: 150%; height: 150%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none;
 }
 
+.illustration-wrapper {
+  margin-bottom: 2rem;
+  animation: float 6s ease-in-out infinite;
+  z-index: 2;
+}
+@keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
 
 .marketing-tagline {
-    font-size: 2rem;
-    font-weight: 500;
-    line-height: 1.6;
-    margin-top: 1rem;
-    position: relative;
-    z-index: 2;
-    text-align: center; /* Aseguramos centrado */
+  font-size: 2.2rem; color: white; font-weight: 800; text-align: center; letter-spacing: 1px; margin-bottom: 3rem; z-index: 2;
+}
+
+/* BOTONES LATERALES (Estilo Nike) */
+.side-nav-buttons {
+    display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 300px; z-index: 2;
+}
+
+.side-btn {
+    padding: 15px; border-radius: 30px; font-weight: 700; text-align: center; text-decoration: none; transition: all 0.3s; cursor: pointer;
+}
+
+.side-btn.active {
+    background-color: rgba(255, 255, 255, 0.2); /* Fondo semitransparente para el activo */
     color: var(--color-blanco);
-    width: 100%; /* Asegura que tome el ancho completo para el centrado */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
-.marketing-tagline strong {
-    font-weight: 700;
-    color: var(--color-azul-claro); 
+.side-btn.outline {
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: var(--color-blanco);
 }
+.side-btn.outline:hover { background-color: rgba(255, 255, 255, 0.1); border-color: var(--color-blanco); }
 
-/* Contenedor de la ilustración */
-.illustration-wrapper {
-    position: relative; 
-    z-index: 3;
-    /* *CAMBIO*: Aseguramos que sea circular */
-    border-radius: 50%; 
-    overflow: hidden;
-    width: 350px; 
-    height: 350px; 
-    
-    /* Centrado en el flujo Flexbox */
-    margin: 0; 
-    
-    /* Sombra para efecto 3D/salida */
-    box-shadow: 0 15px 15px rgba(0, 0, 0, 0.4); 
-}
 
-/* La Imagen misma (Brain.png) */
-.illustration-stethoscope { 
-    /* *CAMBIO*: Aumento de tamaño y efecto 3D/Salida */
-    width: 350px; 
-    height: 350px;
-    object-fit: contain; 
-    
-    /* Sombra para efecto "salida" */
-    filter: drop-shadow(0 15px 15px rgba(0, 0, 0, 0.4));
-    
-    /* Transformación de perspectiva para un ligero efecto 3D */
-    transform: perspective(1000px) rotateX(5deg) scale(1.05);
-    transition: transform 0.3s;
-}
-
-/* --- 2. CARD DEL FORMULARIO (Derecha) --- */
+/* --- SECCIÓN DERECHA (FORMULARIO BLANCO) --- */
 .login-card {
-    background: var(--color-blanco);
-    padding: 3rem 4rem;
-    width: 60%;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; 
+  flex: 1; /* 50% ancho */
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  background-color: var(--color-blanco); padding: 40px;
 }
 
-.language-selector {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: var(--texto-chico);
-    color: var(--color-gris-texto);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
+.form-wrapper { width: 100%; max-width: 420px; } /* Ancho máximo del contenido */
 
-.title-form {
-    color: var(--color-azul-marino);
-    font-size: 1.8rem;
-    margin-bottom: 2.5rem;
-    font-weight: 700;
-    text-align: center;
-}
+.form-header-logo { display: flex; flex-direction: column; align-items: center; margin-bottom: 2rem; }
+.title-form { font-size: 1.8rem; font-weight: 800; color: var(--color-azul-marino); margin: 1rem 0 0 0; }
 
-/* --- BOTONES SOCIALES --- */
-.social-login {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
+/* BOTONES SOCIALES (Conservados) */
+.social-login { display: flex; gap: 15px; margin-bottom: 1.5rem; }
 .btn-social {
-    flex: 1;
-    padding: 0.75rem;
-    border-radius: 6px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: var(--texto-base);
-    transition: background-color 0.2s;
-    background-color: var(--color-blanco);
-    border: 1px solid var(--color-gris-borde);
-    color: var(--color-azul-marino); 
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px;
+  border-radius: 10px; border: 1px solid #E5E7EB; background: var(--color-blanco); color: var(--color-texto);
+  font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
 }
+.btn-social:hover { background-color: #F9FAFB; border-color: var(--color-azul-marino); }
+.icon-social { width: 20px; height: 20px; }
 
-.btn-social:hover {
-    background-color: #F8F8F8;
-}
+.separator-or { text-align: center; color: var(--color-gris-icono); font-size: 0.85rem; margin: 1.5rem 0; position: relative; }
+.separator-or::before, .separator-or::after { content: ""; position: absolute; top: 50%; width: 40%; height: 1px; background-color: #E5E7EB; }
+.separator-or::before { left: 0; } .separator-or::after { right: 0; }
 
-.icon-social {
-    width: 20px;
-    height: 20px;
-    margin-right: 8px;
-}
+/* INPUTS CON ICONOS (Estilo Nuevo) */
+.form-group { margin-bottom: 1.2rem; }
+.form-group label { display: block; font-size: 0.9rem; font-weight: 700; color: var(--color-azul-marino); margin-bottom: 0.5rem; margin-left: 4px;}
 
-.separator-or {
-    text-align: center;
-    color: var(--color-gris-texto);
-    margin: 1.5rem 0;
-    font-size: var(--texto-chico);
+.input-with-icon-wrapper {
     position: relative;
+    display: flex; align-items: center;
 }
 
-.separator-or::before,
-.separator-or::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    width: 40%;
-    height: 1px;
-    background-color: var(--color-gris-borde);
-}
-
-.separator-or::before {
-    left: 0;
-}
-
-.separator-or::after {
-    right: 0;
-}
-
-/* --- FORMULARIO Y CAMPOS --- */
-.form-group {
-    margin-bottom: 1rem;
+.input-icon-left {
+    position: absolute; left: 15px; color: var(--color-gris-icono);
 }
 
 .form-group input {
-    width: 100%;
-    padding: 1rem 1.25rem;
-    border-radius: 8px;
-    border: 1px solid var(--color-gris-borde);
-    font-size: var(--texto-base);
-    outline: none;
-    transition: border-color 0.2s;
-    color: var(--color-azul-marino);
+  width: 100%;
+  padding: 14px 15px 14px 45px; /* Padding izquierdo grande para el icono */
+  border: none;
+  border-radius: 12px; /* Bordes redondeados modernos */
+  background-color: var(--color-gris-claro); /* Fondo gris claro */
+  font-size: 1rem; color: var(--color-texto); outline: none; transition: all 0.2s;
 }
 
 .form-group input:focus {
-    border-color: var(--color-azul-claro);
+    background-color: var(--color-blanco);
+    box-shadow: 0 0 0 2px var(--color-azul-marino); /* Anillo azul al enfocar */
 }
 
-.password-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
+.input-error { box-shadow: 0 0 0 2px #EF4444 !important; background-color: #FEF2F2 !important; }
+.error { color: #EF4444; font-size: 0.8rem; margin-top: 5px; margin-left: 4px; }
+
+.icon-eye-right {
+    position: absolute; right: 15px; color: var(--color-gris-icono); cursor: pointer;
 }
 
-.icon-eye {
-    position: absolute;
-    right: 1.25rem;
-    cursor: pointer;
-    color: var(--color-gris-texto);
-}
+/* BOTONES Y LINKS */
+.forgot-password { text-align: right; margin-bottom: 1.5rem; }
+.link-olvide { font-size: 0.9rem; color: var(--color-naranja-calido); font-weight: 600; cursor: pointer; text-decoration: none; }
 
-/* Estados de validación */
-.input-success {
-    background-color: #A8E6CF; 
-    border: 1px solid var(--color-success); 
-    color: var(--color-azul-marino);
-}
-
-.input-error {
-    background-color: #FDEDED;
-    border: 1px solid var(--color-error); 
-    color: var(--color-error);
-}
-
-.error {
-    font-size: 0.8rem;
-    margin-top: 0.4rem;
-    color: var(--color-error);
-    font-weight: 500;
-}
-
-/* --- Enlace Olvidé Contraseña --- */
-.forgot-password {
-    text-align: right;
-    margin-bottom: 2rem;
-    font-size: var(--texto-chico);
-}
-
-.forgot-password a {
-    color: var(--color-naranja-calido);
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.forgot-password a:hover {
-    text-decoration: underline;
-    color: var(--color-amarillo-vibrante);
-}
-
-
-/* --- Botón Principal --- */
 .btn-submit {
-    width: 100%;
-    padding: 1rem;
-    background-color: var(--color-amarillo-vibrante);
-    color: var(--color-azul-marino);
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1.05rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 1rem;
+  width: 100%; padding: 15px;
+  background-color: var(--color-amarillo-vibrante); /* TU AMARILLO */
+  color: var(--color-azul-marino);
+  border: none; border-radius: 30px; /* Botón redondo */
+  font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 15px rgba(255, 195, 0, 0.3);
 }
+.btn-submit:hover { transform: translateY(-2px); background-color: #FFD700; }
+.btn-submit:disabled { background-color: #E5E7EB; color: #9CA3AF; cursor: not-allowed; box-shadow: none; }
 
-.btn-submit:hover {
-    background-color: var(--color-naranja-calido); 
-    color: var(--color-blanco);
-}
-
-.btn-submit:disabled {
-    background-color: #AAB7C4;
-    cursor: not-allowed;
-    color: var(--color-blanco);
-}
-
-/* --- Enlace de Registro --- */
-.registro-link {
-    text-align: center;
-    margin-top: 1.5rem;
-    font-size: var(--texto-chico);
-    color: var(--color-azul-marino);
-}
-
-.registro-link .link {
-    color: var(--color-naranja-calido);
-    font-weight: 600;
-    text-decoration: none;
-}
-
-.registro-link .link:hover {
-    text-decoration: underline;
-    color: var(--color-amarillo-vibrante);
-}
-
-/* --- Media Queries (Responsividad) --- */
-@media (max-width: 992px) {
-    .login-content {
-        flex-direction: column;
-        min-height: auto;
-        width: 90%;
-    }
-
-    .marketing-section {
-        width: 100%;
-        min-height: 200px;
-        padding: 2rem;
-        align-items: center; /* Centramos el contenido en la vista móvil */
-    }
-    
-    .marketing-section::after {
-        display: none; 
-    }
-
-    .illustration-wrapper {
-        display: none; /* Se oculta la imagen grande en móvil */
-    }
-
-    .login-card {
-        width: 100%;
-        padding: 2rem;
-    }
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .login-container { flex-direction: column; height: auto; min-height: 100vh; }
+  .marketing-section { padding: 40px 20px; flex: none; }
+  .illustration-wrapper { max-width: 200px; margin-bottom: 1rem; }
+  .marketing-tagline { font-size: 1.5rem; margin-bottom: 1.5rem; }
+  .side-nav-buttons { flex-direction: row; }
+  .login-card { flex: none; padding: 40px 20px; }
 }
