@@ -1,6 +1,7 @@
 // 1. Configuración básica (siempre va al inicio)
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
