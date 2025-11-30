@@ -1,20 +1,21 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { prisma } from '@/app/lib/prisma'; // 👈 1. IMPORTANTE: Asegúrate de tener este archivo (ver abajo si no)
+import { db } from '@/app/lib/db'; // Tu conexión Drizzle
+import { usuarios } from '@/app/lib/schema'; // Tus tablas
+import { eq } from 'drizzle-orm';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { correo, contrasena } = body;
 
-    // 2. BUSCAR EN BASE DE DATOS REAL
-    const usuario = await prisma.usuario.findUnique({
-      where: { 
-        correo: correo 
-      },
-      include: { 
-        rol: true // 👈 3. Traemos la relación para leer usuario.rol.nombre
+    // 1. BUSCAR EN BASE DE DATOS (Estilo Drizzle Query)
+    // Usamos .findFirst() que es muy parecido al findUnique de Prisma
+    const usuario = await db.query.usuarios.findFirst({
+      where: eq(usuarios.correo, correo),
+      with: {
+        rol: true // 👈 2. Traemos la relación (igual que include en Prisma)
       }
     });
     
@@ -26,8 +27,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 4. Validar contraseña (bcrypt)
-    // Nota: Esto asume que en tu registro hasheaste la contraseña
+    // 3. Validar contraseña (bcrypt)
     const passValido = await bcrypt.compare(contrasena, usuario.contrasena);
     
     if (!passValido) {
@@ -37,20 +37,19 @@ export async function POST(request: Request) {
       );
     }
 
-    // 5. Generar Token JWT
+    // 4. Generar Token JWT
     const payload = { 
       sub: usuario.id, 
       correo: usuario.correo, 
       nombre: usuario.nombre, 
-      // Ojo: Si el rol es null por alguna razón, esto fallaría. 
-      // El '?' protege si el usuario no tuviera rol asignado.
+      // El '?' protege si el usuario no tuviera rol asignado (aunque en BD es notNull)
       rol: usuario.rol?.nombre 
     };
 
     const secret = process.env.JWT_SECRET || 'default_secret';
     const token = jwt.sign(payload, secret, { expiresIn: '1h' });
 
-    // 6. Retornar respuesta
+    // 5. Retornar respuesta
     return NextResponse.json({
       mensaje: 'Inicio de sesión exitoso',
       token,

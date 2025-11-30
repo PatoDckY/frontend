@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import jwt from 'jsonwebtoken';
-import { prisma } from '@/app/lib/prisma';
+import { db } from '@/app/lib/db'; // 👈 Tu conexión Drizzle
+import { usuarios } from '@/app/lib/schema'; // 👈 Tus tablas
+import { eq } from 'drizzle-orm';
 
 export async function GET() {
   try {
-    // 👇 CAMBIO IMPORTANTE: Agregamos 'await' aquí
+    // 👇 Esto sigue igual, obligatorio en Next.js 15
     const headersList = await headers(); 
     const authHeader = headersList.get('authorization');
 
@@ -31,12 +33,11 @@ export async function GET() {
       );
     }
 
-    // 3. Validar en Base de Datos
-    const usuario = await prisma.usuario.findUnique({
-      where: { 
-        id: Number(decoded.sub) 
-      },
-      include: {
+    // 3. Validar en Base de Datos (Estilo Drizzle)
+    // Buscamos por ID (decoded.sub) y traemos el Rol
+    const usuario = await db.query.usuarios.findFirst({
+      where: eq(usuarios.id, Number(decoded.sub)),
+      with: {
         rol: true 
       }
     });
@@ -48,7 +49,7 @@ export async function GET() {
       );
     }
 
-    // 4. Retornar el perfil
+    // 4. Retornar el perfil limpio
     return NextResponse.json({
       id: usuario.id,
       correo: usuario.correo,

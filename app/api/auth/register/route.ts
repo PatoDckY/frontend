@@ -1,18 +1,19 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
-import { prisma } from '@/app/lib/prisma';
+import { db } from '@/app/lib/db'; // 👈 Tu nueva conexión Drizzle
+import { usuarios, roles } from '@/app/lib/schema'; // 👈 Tus tablas
+import { eq } from 'drizzle-orm'; // Operador "igual"
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     
-    // 1. Extraemos los datos (YA NO pedimos el rolId aquí)
+    // 1. Extraemos los datos
     const { nombre, apellidoPaterno, apellidoMaterno, edad, sexo, telefono, correo, contrasena } = body;
 
-    // 2. Definimos el rol por defecto (Cliente)
     const ROL_POR_DEFECTO = 1;
 
-    // 3. Validar campos obligatorios (rolId ya no es necesario validarlo aquí)
+    // 2. Validar campos obligatorios
     if (!correo || !contrasena || !nombre) {
       return NextResponse.json(
         { message: 'Faltan datos obligatorios (nombre, correo, contrasena)' }, 
@@ -20,51 +21,58 @@ export async function POST(request: Request) {
       );
     }
 
-    // 4. Verificar si el usuario ya existe
-    const usuarioExistente = await prisma.usuario.findUnique({
-      where: { correo: correo }
-    });
+    // 3. Verificar si el usuario ya existe
+    // Prisma: prisma.usuario.findUnique(...)
+    // Drizzle: select().from().where()
+    const usuariosEncontrados = await db
+      .select()
+      .from(usuarios)
+      .where(eq(usuarios.correo, correo));
 
-    if (usuarioExistente) {
+    if (usuariosEncontrados.length > 0) {
       return NextResponse.json(
         { message: 'El correo ya está registrado' }, 
         { status: 409 }
       );
     }
 
-    // 5. Verificar que el Rol 1 exista en la BD (Seguridad para que no truene)
-    const rolExiste = await prisma.rol.findUnique({
-      where: { id: ROL_POR_DEFECTO }
-    });
+    // 4. Verificar que el Rol 1 exista (Seguridad)
+    // Prisma: prisma.rol.findUnique(...)
+    const rolesEncontrados = await db
+      .select()
+      .from(roles)
+      .where(eq(roles.id, ROL_POR_DEFECTO));
 
-    if (!rolExiste) {
+    if (rolesEncontrados.length === 0) {
       return NextResponse.json(
         { message: 'Error de configuración: El Rol "Cliente" (ID 1) no existe en la base de datos.' }, 
         { status: 500 }
       );
     }
 
-    // 6. Hashear contraseña
+    // 5. Hashear contraseña
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(contrasena, salt);
 
-    // 7. Crear usuario forzando el rolId
-    const nuevoUsuario = await prisma.usuario.create({
-      data: {
+    // 6. Crear usuario
+    // Prisma: prisma.usuario.create({ data: ... })
+    // Drizzle: insert(tabla).values(...).returning()
+    const nuevosUsuarios = await db.insert(usuarios).values({
         nombre,
         apellidoPaterno,
-        apellidoMaterno,
+        apellidoMaterno: apellidoMaterno || null, // Manejo de opcional
         edad: Number(edad),
         sexo,
         telefono,
         correo,
         contrasena: hashedPassword,
-        rolId: ROL_POR_DEFECTO // 👈 AQUÍ LA MAGIA: Siempre será 1
-      }
-    });
+        rolId: ROL_POR_DEFECTO
+    }).returning(); // 👈 Importante: Drizzle no devuelve el objeto creado por defecto, hay que pedirlo.
 
-    // 8. Retornar éxito sin password
-    const { contrasena: _, ...usuarioSinPass } = nuevoUsuario;
+    // 7. Retornar éxito sin password
+    // 'nuevosUsuarios' es un array, tomamos el primero
+    const usuarioCreado = nuevosUsuarios[0];
+    const { contrasena: _, ...usuarioSinPass } = usuarioCreado;
 
     return NextResponse.json({
       mensaje: 'Usuario registrado exitosamente',
