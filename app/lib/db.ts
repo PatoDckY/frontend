@@ -1,11 +1,13 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import * as schema from './schema'; // Importamos las tablas
+import * as schema from './schema';
 
 const connectionString = process.env.DATABASE_URL!;
 
-// Configuración del cliente de Postgres
-const client = postgres(connectionString);
+// Configuración optimizada para Vercel + Neon
+const client = postgres(connectionString, { 
+  prepare: false, // Vital para Neon/Serverless (evita errores de prepared statements)
+  ssl: 'require'  // Asegura conexión encriptada
+});
 
-// Inicializamos Drizzle con el esquema
 export const db = drizzle(client, { schema });
