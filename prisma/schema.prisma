@@ -6,7 +6,7 @@ generator client {
 
 datasource db {
   provider = "postgresql" // 👈 Cambia a "postgresql" si usas Postgres
-  url      = env("DATABASE_URL_P")
+  url      = env("POSTGRES_PRISMA_URL")
 }
 
 // 2. Traducción de tu entidad Rol
