@@ -1,42 +1,36 @@
-// 1. Configuración básica (siempre va al inicio)
 generator client {
   provider = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "postgresql" // 👈 Cambia a "postgresql" si usas Postgres
-  url      = env("POSTGRES_PRISMA_URL")
+  provider = "postgresql"
 }
 
-// 2. Traducción de tu entidad Rol
+//
+// MODELOS
+//
+
 model Rol {
   id       Int       @id @default(autoincrement())
   nombre   String    @unique
-  
-  // Relación inversa (equivalente a @OneToMany)
   usuarios Usuario[]
 
-  // Esto asegura que la tabla en BD se siga llamando 'roles' como tenías antes
   @@map("roles")
 }
 
-// 3. Traducción de tu entidad Usuario
 model Usuario {
   id              Int     @id @default(autoincrement())
   nombre          String
   apellidoPaterno String
-  apellidoMaterno String? // El '?' significa nullable (true en TypeORM)
+  apellidoMaterno String?
   edad            Int
   sexo            String
   telefono        String
   correo          String  @unique
   contrasena      String
 
-  // Relación (equivalente a @ManyToOne y @JoinColumn)
-  rolId Int @map("rol_id") // Mapeamos la columna a 'rol_id' como tenías antes
+  rolId Int @map("rol_id")
   rol   Rol @relation(fields: [rolId], references: [id])
 
-  // Nombre de la tabla
   @@map("usuarios")
 }
