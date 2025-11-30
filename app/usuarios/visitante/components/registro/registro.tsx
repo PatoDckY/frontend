@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-toastify";
-// Asegúrate de que la ruta al CSS sea correcta según tu estructura
 import "../../styles/registro/registro.css";
 
 type FormData = {
@@ -20,7 +19,6 @@ type Errores = Partial<Record<keyof FormData, string>>;
 export default function RegistroPublico() {
   const router = useRouter();
   
-  // --- ESTADOS DEL FORMULARIO ---
   const [formData, setFormData] = useState<FormData>({
     nombre: "", apellidoPaterno: "", apellidoMaterno: "", edad: "",
     sexo: "", telefono: "", correo: "", contrasena: "", confirmarContrasena: "",
@@ -30,19 +28,16 @@ export default function RegistroPublico() {
   const [mostrarConfirmar, setMostrarConfirmar] = useState(false);
   const [cargando, setCargando] = useState(false);
 
-  // --- ESTADOS PARA VERIFICACIÓN OTP ---
+  // Estados OTP
   const [modalVisible, setModalVisible] = useState(false);
   const [verificandoOtp, setVerificandoOtp] = useState(false);
-  
-  // Array para los 6 dígitos individuales
   const [otpValues, setOtpValues] = useState<string[]>(new Array(6).fill(""));
-  // Referencias para el foco automático
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  // --- TEMPORIZADOR DE REENVÍO ---
+  // Temporizador
   const [segundosRestantes, setSegundosRestantes] = useState(0);
+  const [intentosReenvio, setIntentosReenvio] = useState(0);
 
-  // Efecto para la cuenta regresiva
   useEffect(() => {
     let intervalo: NodeJS.Timeout;
     if (segundosRestantes > 0) {
@@ -59,83 +54,113 @@ export default function RegistroPublico() {
     return `${min}:${seg < 10 ? `0${seg}` : seg}`;
   };
 
-  // --- MANEJO DEL FORMULARIO PRINCIPAL ---
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    // Validación para solo números en edad y teléfono
     if ((name === "edad" || name === "telefono") && value !== "" && !/^\d+$/.test(value)) return;
+    
     setFormData({ ...formData, [name]: value });
+    // Limpiar error al escribir
     if (errores[name as keyof FormData]) setErrores({ ...errores, [name]: "" });
   };
 
+  // --- VALIDACIONES ACTUALIZADAS ---
   const validarFormulario = () => {
     const nuevosErrores: Errores = {};
-    if (!formData.nombre.trim()) nuevosErrores.nombre = "Obligatorio";
-    if (!formData.apellidoPaterno.trim()) nuevosErrores.apellidoPaterno = "Obligatorio";
-    if (!formData.apellidoMaterno.trim()) nuevosErrores.apellidoMaterno = "Obligatorio";
+    const pass = formData.contrasena;
+
+    if (!formData.nombre.trim()) nuevosErrores.nombre = "El nombre es obligatorio";
+    if (!formData.apellidoPaterno.trim()) nuevosErrores.apellidoPaterno = "El apellido es obligatorio";
+    if (!formData.apellidoMaterno.trim()) nuevosErrores.apellidoMaterno = "El apellido es obligatorio";
+    
     const edadNum = parseInt(formData.edad);
-    if (!formData.edad || isNaN(edadNum) || edadNum < 18 || edadNum > 100) nuevosErrores.edad = "18-100 años";
-    if (!formData.sexo) nuevosErrores.sexo = "Selecciona sexo";
-    if (!formData.telefono || formData.telefono.length !== 10) nuevosErrores.telefono = "10 dígitos exactos";
-    if (!formData.correo || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.correo)) nuevosErrores.correo = "Correo inválido";
-    if (!formData.contrasena || formData.contrasena.length < 6) nuevosErrores.contrasena = "Mín. 6 car.";
-    if (formData.contrasena !== formData.confirmarContrasena) nuevosErrores.confirmarContrasena = "No coinciden";
+    if (!formData.edad || isNaN(edadNum) || edadNum < 18 || edadNum > 100) nuevosErrores.edad = "Debes tener entre 18 y 100 años";
+    
+    if (!formData.sexo) nuevosErrores.sexo = "Selecciona tu sexo";
+    
+    if (!formData.telefono || formData.telefono.length !== 10) nuevosErrores.telefono = "El teléfono debe tener 10 dígitos";
+    
+    // Validación Email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.correo || !emailRegex.test(formData.correo)) nuevosErrores.correo = "Ingresa un correo válido";
+
+    // --- VALIDACIÓN DE CONTRASEÑA ---
+    if (!pass) {
+        nuevosErrores.contrasena = "La contraseña es obligatoria";
+    } else if (pass.length < 8) {
+        nuevosErrores.contrasena = "Mínimo 8 caracteres";
+    } else {
+        // Reglas estrictas
+        const tieneLetra = /[a-zA-Z]/.test(pass);
+        const tieneNumero = /\d/.test(pass);
+        const tieneEspecial = /[!@#$%^&*(),.?":{}|<>]/.test(pass);
+        // Busca secuencias como 123, 234, 789, 012
+        const tieneSecuencia = /(012|123|234|345|456|567|678|789|890)/.test(pass);
+
+        if (!tieneLetra || !tieneNumero || !tieneEspecial) {
+            nuevosErrores.contrasena = "Requiere letra, número y símbolo (!@#...)";
+        } else if (tieneSecuencia) {
+            nuevosErrores.contrasena = "No uses secuencias numéricas (ej. 123)";
+        }
+    }
+
+    if (pass !== formData.confirmarContrasena) nuevosErrores.confirmarContrasena = "Las contraseñas no coinciden";
 
     setErrores(nuevosErrores);
     return Object.keys(nuevosErrores).length === 0;
   };
 
-  // --- 1. ENVIAR CÓDIGO (Pre-Registro y Reenvío) ---
   const enviarCodigo = async (esReenvio = false) => {
     if (!esReenvio && !validarFormulario()) { 
-        toast.error("Corrige los errores antes de continuar."); 
+        toast.error("Por favor revisa los campos en rojo."); 
         return; 
     }
 
     try {
       setCargando(true);
       
-      // Endpoint para enviar el correo
-      await axios.post("/api/auth/send-verification-code", { correo: formData.correo, nombre: formData.nombre });
+      await axios.post("/api/auth/send-verification-code", { 
+          correo: formData.correo,
+          nombre: formData.nombre 
+      });
       
       toast.info(`Código enviado a ${formData.correo}`);
       
-      // Lógica de Tiempos
       if (!esReenvio) {
         setModalVisible(true);
-        setSegundosRestantes(59); // Primera vez: 59 segundos
-        setOtpValues(new Array(6).fill("")); // Limpiar inputs al abrir
+        setSegundosRestantes(59);
+        setIntentosReenvio(0);
+        setOtpValues(new Array(6).fill(""));
       } else {
-        setSegundosRestantes(120); // Reenvíos siguientes: 2 minutos (120s)
+        setSegundosRestantes(120); 
+        setIntentosReenvio(prev => prev + 1);
       }
 
     } catch (error: any) {
+        // Aquí capturamos el error 409 que configuramos en el backend
         if (error.response?.status === 409) {
-            toast.error("Este correo ya está registrado.");
+            toast.error("Este correo ya está registrado. Intenta iniciar sesión.");
+            // Opcional: setErrores({ ...errores, correo: "Correo ya registrado" });
         } else {
-            toast.error("Error al enviar el código.");
+            toast.error("Error al conectar con el servidor.");
         }
     } finally {
       setCargando(false);
     }
   };
 
-  // --- LÓGICA DE INPUTS OTP (Casillas) ---
+  // --- LÓGICA OTP ---
   const handleOtpChange = (index: number, value: string) => {
-    if (isNaN(Number(value))) return; // Solo números
-
+    if (isNaN(Number(value))) return;
     const newOtp = [...otpValues];
-    // Tomar solo el último caracter ingresado
     newOtp[index] = value.substring(value.length - 1);
     setOtpValues(newOtp);
-
-    // Mover foco a la derecha si se escribió un número
     if (value && index < 5 && inputRefs.current[index + 1]) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
   const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Mover foco a la izquierda si se borra
     if (e.key === "Backspace" && !otpValues[index] && index > 0 && inputRefs.current[index - 1]) {
       inputRefs.current[index - 1]?.focus();
     }
@@ -145,25 +170,21 @@ export default function RegistroPublico() {
     e.preventDefault();
     const data = e.clipboardData.getData("text").slice(0, 6).split("");
     if (data.length === 0) return;
-
     const newOtp = [...otpValues];
     data.forEach((char, index) => {
         if (index < 6 && !isNaN(Number(char))) newOtp[index] = char;
     });
     setOtpValues(newOtp);
-    // Enfocar el último llenado
     const nextFocus = Math.min(data.length, 5);
     inputRefs.current[nextFocus]?.focus();
   };
 
-  // --- 2. VERIFICAR CÓDIGO Y REGISTRAR ---
   const handleVerificarYRegistrar = async () => {
     const codigoFinal = otpValues.join("");
-    if (codigoFinal.length !== 6) { toast.warning("Ingresa los 6 dígitos completos"); return; }
+    if (codigoFinal.length !== 6) { toast.warning("Ingresa el código completo"); return; }
     
     try {
       setVerificandoOtp(true);
-
       const { confirmarContrasena, ...datosLimpios } = formData;
       const datosEnvio = { 
           ...datosLimpios, 
@@ -172,8 +193,8 @@ export default function RegistroPublico() {
       };
 
       await axios.post("/api/auth/register", datosEnvio);
-
-      toast.success("¡Bienvenido! Cuenta creada exitosamente.");
+      
+      toast.success("¡Registro exitoso!");
       setModalVisible(false);
       setTimeout(() => { router.push("/usuarios/visitante/screens/Login"); }, 2000);
 
@@ -186,25 +207,18 @@ export default function RegistroPublico() {
 
   return (
     <div className="registro-container">
-        
-      {/* --- MODAL DE VERIFICACIÓN (DISEÑO MODERNO) --- */}
       {modalVisible && (
         <div className="modal-overlay">
             <div className="modal-otp modern">
                 <button className="btn-close-modal" onClick={() => setModalVisible(false)}><X size={20}/></button>
-                
-                {/* Logo Arriba */}
                 <div className="modal-logo-wrapper">
-                    <Image src="/logo.png" alt="Logo CMP" width={50} height={50} style={{objectFit:'contain'}} />
+                    <Image src="/logo.png" alt="Logo CMP" width={60} height={60} style={{objectFit:'contain'}} />
                 </div>
-
                 <h3>Verificación de Seguridad</h3>
                 <p className="modal-subtitle">
-                    Ingresa el código de 6 dígitos enviado a <br/>
+                    Ingresa el código enviado a <br/>
                     <strong>{formData.correo}</strong>
                 </p>
-                
-                {/* Inputs X-X-X-X-X-X */}
                 <div className="otp-inputs-container">
                     {otpValues.map((digit, index) => (
                         <input
@@ -220,66 +234,52 @@ export default function RegistroPublico() {
                         />
                     ))}
                 </div>
-
                 <button className="btn-verify" onClick={handleVerificarYRegistrar} disabled={verificandoOtp}>
                     {verificandoOtp ? "Verificando..." : "Validar Código"}
                 </button>
-                
-                {/* Reenvío con Temporizador */}
                 <div className="resend-wrapper">
                     {segundosRestantes > 0 ? (
-                        <p className="timer-text">
-                            Reenviar código en <span>{formatearTiempo(segundosRestantes)}</span>
-                        </p>
+                        <p className="timer-text">Reenviar en <span>{formatearTiempo(segundosRestantes)}</span></p>
                     ) : (
-                        <p className="resend-text">
-                            ¿No recibiste el código? <span onClick={() => enviarCodigo(true)} className="link-resend">Reenviar ahora</span>
-                        </p>
+                        <p className="resend-text">¿No llegó? <span onClick={() => enviarCodigo(true)} className="link-resend">Reenviar ahora</span></p>
                     )}
                 </div>
             </div>
         </div>
       )}
 
-      {/* --- IZQUIERDA (AZUL) --- */}
       <div className="marketing-section">
         <div className="marketing-content-fixed">
             <div className="illustration-wrapper">
                 <Image src="/logo.png" alt="Ilustración" width={350} height={350} className="illustration-register" priority />
             </div>
             <h1 className="marketing-tagline">Centro Médico Pichardo</h1>
-
             <div className="side-nav-buttons">
-                <Link href="/usuarios/visitante/screens/Login" className="side-btn outline">
-                    INICIAR SESIÓN
-                </Link>
+                <Link href="/usuarios/visitante/screens/Login" className="side-btn outline">INICIAR SESIÓN</Link>
                 <div className="side-btn active">REGISTRARSE</div>
             </div>
         </div>
       </div>
 
-      {/* --- DERECHA (FORMULARIO) --- */}
       <div className="registro-card">
         <h2 className="title-form">Crear Nueva Cuenta</h2>
-        
         <div className="separator-or" style={{marginTop:'20px'}}>Ingresa tus datos</div>
 
-        {/* Usamos preventDefault y llamamos a enviarCodigo(false) para el primer envío */}
         <form className="registro-form" onSubmit={(e) => { e.preventDefault(); enviarCodigo(false); }}>
-          
-          {/* TUS INPUTS (Sin cambios en esta sección) */}
           <div className="form-row">
             <div className="form-group half">
               <div className="input-with-icon-wrapper">
                   <User className="input-icon-left" size={20} />
                   <input type="text" name="nombre" placeholder="Nombre" value={formData.nombre} onChange={handleChange} className={errores.nombre ? "input-error" : ""} />
               </div>
+              {errores.nombre && <span className="error">{errores.nombre}</span>}
             </div>
             <div className="form-group half">
               <div className="input-with-icon-wrapper">
                   <User className="input-icon-left" size={20} />
-                  <input type="text" name="apellidoPaterno" placeholder="Apellido Paterno" value={formData.apellidoPaterno} onChange={handleChange} className={errores.apellidoPaterno ? "input-error" : ""} />
+                  <input type="text" name="apellidoPaterno" placeholder="Ap. Paterno" value={formData.apellidoPaterno} onChange={handleChange} className={errores.apellidoPaterno ? "input-error" : ""} />
               </div>
+              {errores.apellidoPaterno && <span className="error">{errores.apellidoPaterno}</span>}
             </div>
           </div>
 
@@ -288,6 +288,7 @@ export default function RegistroPublico() {
                 <User className="input-icon-left" size={20} />
                 <input type="text" name="apellidoMaterno" placeholder="Apellido Materno" value={formData.apellidoMaterno} onChange={handleChange} className={errores.apellidoMaterno ? "input-error" : ""} />
             </div>
+            {errores.apellidoMaterno && <span className="error">{errores.apellidoMaterno}</span>}
           </div>
 
           <div className="form-row">
@@ -296,6 +297,7 @@ export default function RegistroPublico() {
                 <Calendar className="input-icon-left" size={20} />
                 <input type="number" name="edad" placeholder="Edad" value={formData.edad} onChange={handleChange} className={errores.edad ? "input-error" : ""} />
               </div>
+              {errores.edad && <span className="error">{errores.edad}</span>}
             </div>
             <div className="form-group half">
               <div className="input-with-icon-wrapper">
@@ -306,6 +308,7 @@ export default function RegistroPublico() {
                     <option value="femenino">Femenino</option>
                 </select>
               </div>
+              {errores.sexo && <span className="error">{errores.sexo}</span>}
             </div>
           </div>
 
@@ -314,6 +317,7 @@ export default function RegistroPublico() {
                 <Phone className="input-icon-left" size={20} />
                 <input type="tel" name="telefono" placeholder="Teléfono" value={formData.telefono} onChange={handleChange} className={errores.telefono ? "input-error" : ""} maxLength={10} />
             </div>
+            {errores.telefono && <span className="error">{errores.telefono}</span>}
           </div>
 
           <div className="form-group">
@@ -321,6 +325,7 @@ export default function RegistroPublico() {
                 <Mail className="input-icon-left" size={20} />
                 <input type="email" name="correo" placeholder="Correo Electrónico" value={formData.correo} onChange={handleChange} className={errores.correo ? "input-error" : ""} />
             </div>
+            {errores.correo && <span className="error">{errores.correo}</span>}
           </div>
 
           <div className="form-group password-wrapper">
@@ -331,6 +336,7 @@ export default function RegistroPublico() {
                     {mostrarContrasena ? <EyeOff size={20} /> : <Eye size={20} />}
                 </span>
             </div>
+            {errores.contrasena && <span className="error">{errores.contrasena}</span>}
           </div>
 
           <div className="form-group password-wrapper">
@@ -341,6 +347,7 @@ export default function RegistroPublico() {
                     {mostrarConfirmar ? <EyeOff size={20} /> : <Eye size={20} />}
                 </span>
             </div>
+            {errores.confirmarContrasena && <span className="error">{errores.confirmarContrasena}</span>}
           </div>
 
           <button type="submit" className="btn-submit" disabled={cargando}>
