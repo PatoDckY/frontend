@@ -1,4 +1,4 @@
-import { pgTable, serial, text, integer } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, timestamp, integer,boolean } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 // 1. Tabla Roles
@@ -18,11 +18,22 @@ export const usuarios = pgTable('usuarios', {
   telefono: text('telefono').notNull(),
   correo: text('correo').notNull().unique(),
   contrasena: text('contrasena').notNull(),
+  resetToken: text('reset_token'), // El código largo
+  resetTokenExpiry: timestamp('reset_token_expiry'), // Cuándo caduca
   
   // Llave foránea (Foreign Key)
   rolId: integer('rol_id')
     .notNull()
     .references(() => roles.id), // Conecta con roles.id
+});
+
+// NUEVA TABLA PARA RATE LIMITING (Control de intentos)
+export const intentosRecuperacion = pgTable('intentos_recuperacion', {
+  id: serial('id').primaryKey(),
+  identificador: text('identificador').notNull(), // Puede ser la IP o el Correo
+  conteo: integer('conteo').default(0),
+  ultimoIntento: timestamp('ultimo_intento').defaultNow(),
+  bloqueadoHasta: timestamp('bloqueado_hasta'),
 });
 
 // 3. Relaciones (Para poder hacer 'findMany' con includes)

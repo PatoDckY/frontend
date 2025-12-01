@@ -164,7 +164,7 @@ export default function LoginPublico() {
             </div>
 
             <div className="forgot-password">
-              <Link href="/usuarios/public/screens/EnlaceMagico" className="link-olvide">
+              <Link href="/usuarios/visitante/screens/EnlaceMagico" className="link-olvide">
                 ¿Olvidaste tu contraseña?
               </Link>
             </div>
