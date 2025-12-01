@@ -20,7 +20,18 @@ export const usuarios = pgTable('usuarios', {
   contrasena: text('contrasena').notNull(),
   resetToken: text('reset_token'), // El código largo
   resetTokenExpiry: timestamp('reset_token_expiry'), // Cuándo caduca
+    // --- SEGURIDAD AVANZADA ---
   
+  // 1. Control de Bloqueo (Brute Force)
+  intentosFallidos: integer('intentos_fallidos').default(0),
+  bloqueadoHasta: timestamp('bloqueado_hasta'),
+
+  // 2. Revocación de Sesiones (Si cambias esto, todos los tokens viejos mueren)
+  versionToken: integer('version_token').default(1),
+
+  // 3. MFA (Multi-Factor Authentication)
+  mfaHabilitado: boolean('mfa_habilitado').default(false),
+  secretoMfa: text('secreto_mfa'), // Aquí se guardaría la clave de Google Authenticator
   // Llave foránea (Foreign Key)
   rolId: integer('rol_id')
     .notNull()

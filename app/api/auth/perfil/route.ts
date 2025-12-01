@@ -1,69 +1,59 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
-import jwt from 'jsonwebtoken';
-import { db } from '@/app/lib/db'; // 👈 Tu conexión Drizzle
-import { usuarios } from '@/app/lib/schema'; // 👈 Tus tablas
+import * as jose from 'jose'; // Usamos la misma librería que en el Login
+import { db } from '@/app/lib/db';
+import { usuarios } from '@/app/lib/schema';
 import { eq } from 'drizzle-orm';
 
 export async function GET() {
   try {
-    // 👇 Esto sigue igual, obligatorio en Next.js 15
     const headersList = await headers(); 
     const authHeader = headersList.get('authorization');
 
-    // 1. Verificar si existe el header
+    // 1. Validar Header
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { message: 'Token no proporcionado o inválido' }, 
-        { status: 401 }
-      );
+      return NextResponse.json({ message: 'Token no proporcionado' }, { status: 401 });
     }
 
     const token = authHeader.split(' ')[1];
-    const secret = process.env.JWT_SECRET || 'default_secret';
-
-    // 2. Verificar y decodificar el token
-    let decoded: any;
+    
+    // 2. Verificar Token (Usando 'jose' para compatibilidad con el Login)
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'clave_super_secreta_local');
+    
+    let payload;
     try {
-      decoded = jwt.verify(token, secret);
+      const { payload: decoded } = await jose.jwtVerify(token, secret);
+      payload = decoded;
     } catch (err) {
-      return NextResponse.json(
-        { message: 'Token inválido o expirado' }, 
-        { status: 401 }
-      );
+      return NextResponse.json({ message: 'Token inválido o expirado' }, { status: 401 });
     }
 
-    // 3. Validar en Base de Datos (Estilo Drizzle)
-    // Buscamos por ID (decoded.sub) y traemos el Rol
+    // 3. Buscar Usuario en BD
+    // OJO: En el Login guardamos 'id', no 'sub'.
+    const userId = Number(payload.id); 
+
     const usuario = await db.query.usuarios.findFirst({
-      where: eq(usuarios.id, Number(decoded.sub)),
+      where: eq(usuarios.id, userId),
       with: {
         rol: true 
       }
     });
 
     if (!usuario) {
-      return NextResponse.json(
-        { message: 'Token válido pero el usuario ya no existe' }, 
-        { status: 401 }
-      );
+      return NextResponse.json({ message: 'Usuario no encontrado' }, { status: 404 });
     }
 
-    // 4. Retornar el perfil limpio
+    // 4. Retornar solo lo que pediste
     return NextResponse.json({
-      id: usuario.id,
+      nombreCompleto: `${usuario.nombre} ${usuario.apellidoPaterno} ${usuario.apellidoMaterno || ''}`.trim(),
       correo: usuario.correo,
-      nombre: usuario.nombre,
-      apellidoPaterno: usuario.apellidoPaterno,
-      apellidoMaterno: usuario.apellidoMaterno,
-      rol: usuario.rol?.nombre || 'Sin Rol', 
+      // Extras por si acaso los ocupas visualmente
+      rol: usuario.rol?.nombre || 'Usuario',
+      id: usuario.id
     });
 
   } catch (error) {
     console.error('Error en perfil:', error);
-    return NextResponse.json(
-      { message: 'Error interno del servidor' }, 
-      { status: 500 }
-    );
+    return NextResponse.json({ message: 'Error interno' }, { status: 500 });
   }
 }
