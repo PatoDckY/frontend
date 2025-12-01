@@ -3,6 +3,7 @@ import { Open_Sans, Lato, Merriweather } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { headers } from "next/headers"; // 👈 Importamos headers
 
 import Navegacion from "./Navegacion"; 
 
@@ -15,7 +16,14 @@ export const metadata = {
   description: "Proyecto de sistema de gestion para un centro medico",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+// ⚠️ CAMBIO CRÍTICO: Agregamos 'async' porque en Next.js 15 headers() es una promesa
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  
+  // 1. Recuperamos el nonce de seguridad
+  // Ahora debemos esperar (await) a que se resuelvan los headers
+  const headersList = await headers();
+  const nonce = headersList.get("x-nonce") || "";
+
   return (
     <html lang="es">
       <body className={`${openSans.className} ${lato.className} ${merriweather.className}`}>
@@ -32,6 +40,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
         <ToastContainer position="top-right" autoClose={3000} theme="colored" />
         
+        {/* Si en el futuro necesitas agregar scripts de Google Analytics u otros,
+            recuerda pasarles el nonce así: 
+            <Script src="..." strategy="afterInteractive" nonce={nonce} />
+        */}
       </body>
     </html>
   );

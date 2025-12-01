@@ -2,18 +2,15 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const response = NextResponse.next();
-
-  // --- CONTENT SECURITY POLICY (CSP) COMPATIBLE ---
-  // Cambios realizados para arreglar el error:
-  // 1. Agregamos 'unsafe-inline': Permite los scripts de hidratación de Next.js.
-  // 2. Agregamos 'unsafe-eval': Necesario para algunas librerías en producción.
-  // 3. Quitamos el 'nonce': Es lo que estaba causando el bloqueo.
+  // 1. Generar Nonce único
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
   
+  // 2. Definir la política CSP Estricta (Sin unsafe-inline)
+  // Nota: Agregamos 'https:' y 'data:' en font-src e img-src para evitar bloqueos de recursos externos
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-inline' 'unsafe-eval' https:;
-    style-src 'self' 'unsafe-inline' https:;
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic';
+    style-src 'self' 'nonce-${nonce}';
     img-src 'self' blob: data: https:;
     font-src 'self' data: https:;
     connect-src 'self' https:;
@@ -24,23 +21,29 @@ export function middleware(request: NextRequest) {
     upgrade-insecure-requests;
   `;
 
-  // Limpiamos los saltos de línea
+  // Limpiar espacios
   const contentSecurityPolicyHeaderValue = cspHeader
     .replace(/\s{2,}/g, ' ')
     .trim();
 
-  // Aplicamos la cabecera CSP
-  response.headers.set('Content-Security-Policy', contentSecurityPolicyHeaderValue);
+  // 3. Preparar los headers de la solicitud para pasar el Nonce a Next.js
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-nonce', nonce); // 👈 CLAVE: Pasamos el nonce al layout
+  requestHeaders.set('Content-Security-Policy', contentSecurityPolicyHeaderValue);
 
-  // --- OTRAS CABECERAS DE SEGURIDAD (OWASP) ---
+  // 4. Crear respuesta con los nuevos headers de solicitud
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+
+  // 5. Configurar headers de seguridad en la respuesta final (Para el navegador)
+  response.headers.set('Content-Security-Policy', contentSecurityPolicyHeaderValue);
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  
-  // HSTS: Fuerza HTTPS por 1 año
   response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-
-  // Permissions Policy: Bloquea hardware
   response.headers.set(
     'Permissions-Policy',
     'camera=(), microphone=(), geolocation=(), browsing-topics=(), payment=()'
@@ -51,9 +54,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Aplica a todas las rutas excepto archivos estáticos e imágenes
-     */
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 };
