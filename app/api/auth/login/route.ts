@@ -3,44 +3,42 @@ import { db } from '@/app/lib/db';
 import { usuarios } from '@/app/lib/schema';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcrypt';
-import * as jose from 'jose'; // Librería moderna para JWT seguros (npm install jose)
+import * as jose from 'jose'; 
 
 export async function POST(req: Request) {
   try {
     const { correo, contrasena, codigoMfa } = await req.json();
     const ahora = new Date();
 
-    // 1. Buscar usuario
-    const usuariosEncontrados = await db
-        .select()
-        .from(usuarios)
-        .where(eq(usuarios.correo, correo));
+    // 1. BUSCAR USUARIO CON SU ROL (CORRECCIÓN AQUÍ) 🛠️
+    // Usamos db.query en lugar de db.select para incluir la relación 'rol'
+    const usuario = await db.query.usuarios.findFirst({
+        where: eq(usuarios.correo, correo),
+        with: {
+            rol: true // <--- ¡ESTO TRAE EL NOMBRE "admin"!
+        }
+    });
 
-    const usuario = usuariosEncontrados[0];
-
-    // Protección de enumeración de usuarios: Si no existe, devolvemos error genérico
-    // pero tardamos un poco para evitar "timing attacks".
+    // Protección contra enumeración
     if (!usuario) {
         await new Promise(r => setTimeout(r, 500)); 
         return NextResponse.json({ message: "Credenciales incorrectas" }, { status: 401 });
     }
 
-    // 2. VERIFICAR BLOQUEO (Brute Force)
+    // 2. VERIFICAR BLOQUEO
     if (usuario.bloqueadoHasta && usuario.bloqueadoHasta > ahora) {
         return NextResponse.json({ 
-            message: "Cuenta bloqueada temporalmente por seguridad. Intenta en 15 minutos." 
-        }, { status: 423 }); // 423 Locked
+            message: "Cuenta bloqueada temporalmente. Intenta en 15 minutos." 
+        }, { status: 423 });
     }
 
     // 3. VERIFICAR CONTRASEÑA
     const passwordValida = await bcrypt.compare(contrasena, usuario.contrasena);
 
     if (!passwordValida) {
-        // Incrementar contador de fallos
         const nuevosIntentos = (usuario.intentosFallidos || 0) + 1;
         let updateData: any = { intentosFallidos: nuevosIntentos };
 
-        // Si llega a 3 fallos, bloquear por 15 minutos
         if (nuevosIntentos >= 3) {
             updateData.bloqueadoHasta = new Date(ahora.getTime() + 15 * 60 * 1000);
         }
@@ -52,47 +50,39 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: "Credenciales incorrectas" }, { status: 401 });
     }
 
-    // 4. VERIFICAR MFA (Si está habilitado)
+    // 4. VERIFICAR MFA
     if (usuario.mfaHabilitado) {
         if (!codigoMfa) {
-            // Avisar al front que necesitamos el código
-            return NextResponse.json({ 
-                message: "Se requiere código MFA", 
-                requireMfa: true 
-            }, { status: 403 });
+            return NextResponse.json({ message: "Se requiere código MFA", requireMfa: true }, { status: 403 });
         }
-
-        // Aquí validarías el código TOTP usando una librería como 'otplib'
-        // const esValido = authenticator.check(codigoMfa, usuario.secretoMfa);
-        // if (!esValido) return NextResponse.json({ message: "Código MFA inválido" }, { status: 401 });
+        // Aquí validarías el código...
     }
 
-    // --- ÉXITO: RESETEAR INTENTOS ---
+    // --- ÉXITO ---
     await db.update(usuarios)
         .set({ intentosFallidos: 0, bloqueadoHasta: null })
         .where(eq(usuarios.id, usuario.id));
 
-    // 5. GENERAR TOKEN JWT SEGURO (Estructura Header.Payload.Signature)
-    // Usamos 'jose' para firmar con algoritmo HS256
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'secreto_super_seguro_local');
+    // 5. GENERAR TOKEN
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'clave_super_secreta_local');
     
     const token = await new jose.SignJWT({ 
         id: usuario.id, 
         rol: usuario.rolId, 
-        version: usuario.versionToken // 🔥 CLAVE PARA REVOCACIÓN: Si cambias esto en BD, el token muere
+        version: usuario.versionToken 
     })
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
-      .setExpirationTime('15m') // 🔥 Expiración corta (15 min)
+      .setExpirationTime('15m')
       .sign(secret);
 
-    // Quitamos info sensible
     const { contrasena: _, secretoMfa: __, ...usuarioSeguro } = usuario;
 
+    // AHORA usuarioSeguro INCLUYE EL OBJETO ROL: { id: 2, nombre: "admin" }
     return NextResponse.json({ token, usuario: usuarioSeguro });
 
   } catch (error) {
-    console.error(error);
+    console.error("Error en login:", error);
     return NextResponse.json({ message: "Error interno" }, { status: 500 });
   }
 }

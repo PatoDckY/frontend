@@ -8,7 +8,7 @@ import {
   Globe, Stethoscope, GraduationCap, FileText, Settings, 
   Users
 } from "lucide-react";
-import ProfileMenuAdmin from "../Profile/ProfileMenuAdmin"; 
+import ProfileMenuAdmin from "@/app/usuarios/client/components/Profile/ProfileMenu"; 
 import "../../styles/header/HeaderAdmin.css"; 
 
 export default function HeaderAdmin() {
