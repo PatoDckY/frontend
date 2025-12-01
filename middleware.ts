@@ -2,19 +2,23 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const response = NextResponse.next();
-
-  // --- 1. Content-Security-Policy (CSP) ---
-  // Esta es la regla más estricta. Define qué puede cargar tu página.
-  // 'unsafe-inline' es necesario para que los estilos de Next.js funcionen sin configuración extra.
-  // img-src incluye 'https:' para permitir las imágenes externas que definiste en tu next.config.
+  // 1. Generar un Nonce criptográfico único para esta petición
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+  
+  // 2. Detectar si estamos en Desarrollo o Producción
+  // 'unsafe-eval' es necesario solo en desarrollo para que Next.js funcione rápido
+  const isDev = process.env.NODE_ENV !== 'production';
+  
+  // 3. Construir la Política CSP Estricta
+  // - script-src: Reemplazamos 'unsafe-inline' por 'nonce-...'
+  // - 'strict-dynamic': Permite que los scripts confiables carguen sus propias dependencias.
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline';
+    script-src 'self' ${isDev ? "'unsafe-eval'" : ""} 'nonce-${nonce}' 'strict-dynamic';
     style-src 'self' 'unsafe-inline';
     img-src 'self' blob: data: https:;
     font-src 'self' data:;
-    connect-src 'self' https:; 
+    connect-src 'self' https:;
     object-src 'none';
     base-uri 'self';
     form-action 'self';
@@ -22,32 +26,38 @@ export function middleware(request: NextRequest) {
     upgrade-insecure-requests;
   `;
 
-  // Limpiamos los saltos de línea para enviarlo correctamente
+  // Limpiamos los saltos de línea
   const contentSecurityPolicyHeaderValue = cspHeader
     .replace(/\s{2,}/g, ' ')
     .trim();
 
-  response.headers.set('Content-Security-Policy', contentSecurityPolicyHeaderValue);
+  // 4. Pasar el Nonce a Next.js (IMPORTANTE)
+  // Añadimos el nonce y la CSP a los headers de la petición para que Next.js pueda leerlos
+  // y ponerle el nonce a sus propios scripts automáticamente.
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-nonce', nonce);
+  requestHeaders.set('Content-Security-Policy', contentSecurityPolicyHeaderValue);
 
-  // --- 2. Permissions-Policy ---
-  // Bloquea el acceso a hardware sensible a menos que lo autorices explícitamente.
-  // Esto sube mucho la calificación de seguridad.
+  // Creamos la respuesta pasando los headers modificados
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+
+  // 5. Establecer cabeceras en la respuesta final para el navegador
+  response.headers.set('Content-Security-Policy', contentSecurityPolicyHeaderValue);
+  
+  // Bloquear hardware sensible
   response.headers.set(
     'Permissions-Policy',
     'camera=(), microphone=(), geolocation=(), browsing-topics=(), payment=()'
   );
 
-  // --- 3. Cabeceras Estándar (OWASP) ---
-  // Previene que el navegador "adivine" tipos de archivo (MIME sniffing)
+  // Cabeceras OWASP estándar
   response.headers.set('X-Content-Type-Options', 'nosniff');
-  
-  // Evita que tu sitio sea incrustado en un iframe (protección contra Clickjacking)
   response.headers.set('X-Frame-Options', 'DENY');
-  
-  // Controla cuánta información se envía al hacer clic en un enlace externo
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  
-  // Fuerza HTTPS estricto por 1 año (HSTS)
   response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
 
   return response;
@@ -56,11 +66,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Aplica estas reglas a todas las páginas, pero IGNORA:
-     * - Rutas de API (/api/...)
-     * - Archivos estáticos de Next.js (_next/static)
-     * - Imágenes optimizadas (_next/image)
-     * - El favicon
+     * Aplica a todo excepto rutas internas de Next.js y estáticos
      */
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
