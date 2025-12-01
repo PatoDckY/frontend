@@ -93,7 +93,7 @@ export default function LoginPublico() {
 
         setTimeout(() => {
           if (rol.includes("admin")) {
-              router.push("/usuarios/admin/screens/Dashboard");
+              router.push("/asd34dfsdu&ad/home");
           } else {
               router.push("/usuarios/public/screens/HomePublico");
           }
@@ -139,7 +139,7 @@ export default function LoginPublico() {
         
         <div className="side-nav-buttons">
             <div className="side-btn active">INICIAR SESIÓN</div>
-            <Link href="/usuarios/visitante/screens/Registro" className="side-btn outline">
+            <Link href="/registro" className="side-btn outline">
                 REGISTRARSE
             </Link>
         </div>

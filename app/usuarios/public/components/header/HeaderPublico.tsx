@@ -75,10 +75,10 @@ export default function HeaderPublico() {
 
           {/* BOTONES DE ACCIÓN (Desktop) */}
           <div className="auth-buttons desktop-only">
-            <Link href="/usuarios/visitante/screens/Login" className="btn-login">
+            <Link href="/login" className="btn-login">
               Iniciar Sesión
             </Link>
-            <Link href="/usuarios/visitante/screens/Registro" className="btn-registro">
+            <Link href="/registro" className="btn-registro">
               Registrarse
             </Link>
           </div>
@@ -100,10 +100,10 @@ export default function HeaderPublico() {
             <Link href="/usuarios/public/screens/QuienesSomos" onClick={toggleMenu}>¿Quiénes Somos?</Link>
             
             <div className="mobile-auth-buttons">
-                <Link href="/usuarios/visitante/screens/Login" className="btn-login mobile" onClick={toggleMenu}>
+                <Link href="/login" className="btn-login mobile" onClick={toggleMenu}>
                     Iniciar Sesión
                 </Link>
-                <Link href="/usuarios/visitante/screens/Registro" className="btn-registro mobile" onClick={toggleMenu}>
+                <Link href="/registro" className="btn-registro mobile" onClick={toggleMenu}>
                     Registrarse
                 </Link>
             </div>

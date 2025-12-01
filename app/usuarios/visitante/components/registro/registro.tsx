@@ -196,7 +196,7 @@ export default function RegistroPublico() {
       
       toast.success("¡Registro exitoso!");
       setModalVisible(false);
-      setTimeout(() => { router.push("/usuarios/visitante/screens/Login"); }, 2000);
+      setTimeout(() => { router.push("/login"); }, 2000);
 
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Código incorrecto.");
@@ -255,7 +255,7 @@ export default function RegistroPublico() {
             </div>
             <h1 className="marketing-tagline">Centro Médico Pichardo</h1>
             <div className="side-nav-buttons">
-                <Link href="/usuarios/visitante/screens/Login" className="side-btn outline">INICIAR SESIÓN</Link>
+                <Link href="/login" className="side-btn outline">INICIAR SESIÓN</Link>
                 <div className="side-btn active">REGISTRARSE</div>
             </div>
         </div>
@@ -355,7 +355,7 @@ export default function RegistroPublico() {
           </button>
 
           <p className="login-link">
-            ¿Ya tienes cuenta? <Link href="/usuarios/visitante/screens/Login" className="link">Inicia Sesion</Link>
+            ¿Ya tienes cuenta? <Link href="/login" className="link">Inicia Sesion</Link>
           </p>
         </form>
       </div>
