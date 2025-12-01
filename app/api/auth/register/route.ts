@@ -22,6 +22,23 @@ export async function POST(request: Request) {
         contrasena 
     } = body;
 
+
+    const passRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+    
+    if (!contrasena || contrasena.length < 8) {
+        return NextResponse.json({ message: "La contraseña debe tener al menos 8 caracteres." }, { status: 400 });
+    }
+    
+    if (!passRegex.test(contrasena)) {
+        return NextResponse.json({ message: "La contraseña es muy débil (faltan números o símbolos)." }, { status: 400 });
+    }
+    
+    // Validar secuencias (123, abc)
+    const secuencias = ["123", "234", "345", "456", "789", "abc", "qwe"];
+    if (secuencias.some(s => contrasena.includes(s))) {
+         return NextResponse.json({ message: "La contraseña contiene secuencias inseguras." }, { status: 400 });
+    }
+
     const ROL_POR_DEFECTO = 1;
 
     // --- 🛡️ PASO 1: VALIDACIÓN PREVIA Y OTP ---
