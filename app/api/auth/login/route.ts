@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers'; 
 import { db } from '@/app/lib/db';
 import { usuarios } from '@/app/lib/schema';
 import { eq } from 'drizzle-orm';
@@ -63,9 +64,8 @@ export async function POST(req: Request) {
         .set({ intentosFallidos: 0, bloqueadoHasta: null })
         .where(eq(usuarios.id, usuario.id));
 
-    // 5. GENERAR TOKEN
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'clave_super_secreta_local');
-    
+// --- GENERAR TOKEN (Igual que antes) ---
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'secreto_local');
     const token = await new jose.SignJWT({ 
         id: usuario.id, 
         rol: usuario.rolId, 
@@ -76,10 +76,24 @@ export async function POST(req: Request) {
       .setExpirationTime('15m')
       .sign(secret);
 
-    const { contrasena: _, secretoMfa: __, ...usuarioSeguro } = usuario;
+    // 🚀 CAMBIO CLAVE: GUARDAR EN COOKIE HTTPONLY
+    const cookieStore = await cookies();
+    
+    cookieStore.set('auth_token', token, {
+        httpOnly: true, // 🔒 JavaScript no puede leerla (Anti-XSS)
+        secure: process.env.NODE_ENV === 'production', // Solo HTTPS en producción
+        sameSite: 'strict', // 🔒 Protección contra CSRF
+        maxAge: 15 * 60, // 15 minutos (segundos)
+        path: '/',
+    });
 
-    // AHORA usuarioSeguro INCLUYE EL OBJETO ROL: { id: 2, nombre: "admin" }
-    return NextResponse.json({ token, usuario: usuarioSeguro });
+    // Retornamos el usuario (pero SIN el token en el cuerpo)
+    const { contrasena: _, secretoMfa: __, ...usuarioSeguro } = usuario;
+    
+    return NextResponse.json({ 
+        message: "Login exitoso", 
+        usuario: usuarioSeguro 
+    });
 
   } catch (error) {
     console.error("Error en login:", error);

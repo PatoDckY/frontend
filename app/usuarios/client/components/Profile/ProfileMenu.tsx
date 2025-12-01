@@ -5,10 +5,10 @@ import { Settings, LogOut, User } from "lucide-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Importamos estilos locales
+// Estilos
 import "../../styles/Profile/ProfileMenu.css";
 
-// Importamos el componente de configuración usando ruta relativa
+// Componente MFA
 import ConfiguracionMfa from "./ConfiguracionMfa";
 
 interface UsuarioPerfil {
@@ -25,14 +25,23 @@ export default function ProfileMenu() {
   const [loading, setLoading] = useState(true); 
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const handleLogout = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("token");
-      localStorage.removeItem("usuario");
-      localStorage.removeItem("rol");
-      toast.info("Cerrando sesión...");
-      // Redirección forzada para limpiar estado
-      window.location.href = "/usuarios/public/screens/HomePublico";
+  // 🔹 LOGOUT ACTUALIZADO (Limpia Cookie + LocalStorage)
+  const handleLogout = async () => {
+    try {
+        // 1. Pedir al servidor que borre la cookie
+        await axios.post("/api/auth/logout");
+    } catch (error) {
+        console.error("Error al cerrar sesión en servidor");
+    } finally {
+        // 2. Limpiar datos visuales del navegador
+        if (typeof window !== "undefined") {
+            localStorage.removeItem("token"); // Por si quedó basura vieja
+            localStorage.removeItem("usuario");
+            localStorage.removeItem("rol");
+            
+            toast.info("Cerrando sesión...");
+            window.location.href = "/usuarios/public/screens/HomePublico";
+        }
     }
   };
 
@@ -46,30 +55,28 @@ export default function ProfileMenu() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // 🔹 FETCH USER ACTUALIZADO (Sin depender de localStorage token)
   useEffect(() => {
     const fetchUser = async () => {
-      if (typeof window === "undefined") return;
-      const token = localStorage.getItem("token");
-      
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-
       try {
-        const res = await axios.get("/api/auth/perfil", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        // Ya no verificamos 'localStorage.getItem("token")' porque el token está en la cookie.
+        // Hacemos la petición directa. Si no hay cookie, el back devuelve 401.
+        
+        // No enviamos headers manuales, la cookie viaja sola 🍪
+        const res = await axios.get("/api/auth/perfil");
+        
         setUsuario(res.data);
       } catch (error: any) {
-        console.error("Error perfil:", error);
-        if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-            handleLogout();
-        }
+        // Si falla (401/403), significa que la cookie expiró o es inválida
+        console.error("No se pudo cargar perfil:", error.message);
+        
+        // Opcional: Si quieres forzar logout visual si falla el perfil:
+        // if (error.response?.status === 401) handleLogout();
       } finally {
         setLoading(false);
       }
     };
+
     fetchUser();
   }, []);
 
@@ -83,7 +90,7 @@ export default function ProfileMenu() {
             onClick={() => setOpen((prev) => !prev)}
             aria-label="Abrir menú"
         >
-            {/* Usamos img estándar para evitar errores en preview */}
+            {/* Usamos img estándar para asegurar compatibilidad */}
             <img
               src="/logo.png" 
               alt="Perfil"
@@ -109,25 +116,33 @@ export default function ProfileMenu() {
                 </div>
             ) : (
                 <div className="profile-info">
-                    <div className="profile-name" style={{color: 'red'}}>Sin sesión</div>
+                    <div className="profile-name" style={{color: '#EF4444'}}>Sin sesión</div>
+                    <small style={{display:'block', color:'#999', marginTop:'5px'}}>
+                        <a href="/login" style={{textDecoration:'underline'}}>Iniciar sesión</a>
+                    </small>
                 </div>
             )}
 
             <hr />
 
-            <button 
-                className="profile-option" 
-                onClick={() => {
-                    setOpen(false);
-                    setShowConfig(true);
-                }}
-            >
-                <Settings size={16} /> Configuración y Seguridad
-            </button>
-            
-            <button className="profile-option logout" onClick={handleLogout}>
-                <LogOut size={16} /> Cerrar sesión
-            </button>
+            {/* Solo mostramos opciones si hay usuario */}
+            {usuario && (
+                <>
+                    <button 
+                        className="profile-option" 
+                        onClick={() => {
+                            setOpen(false);
+                            setShowConfig(true);
+                        }}
+                    >
+                        <Settings size={16} /> Configuración y Seguridad
+                    </button>
+                    
+                    <button className="profile-option logout" onClick={handleLogout}>
+                        <LogOut size={16} /> Cerrar sesión
+                    </button>
+                </>
+            )}
             
             </div>
         )}

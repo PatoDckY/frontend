@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 import { toast } from "react-toastify";
 
 export default function AdminGuard({ children }: { children: React.ReactNode }) {
@@ -8,32 +9,49 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
   const router = useRouter();
 
   useEffect(() => {
-    // 1. Verificar si hay token
-    const token = localStorage.getItem("token");
-    const rol = localStorage.getItem("rol"); // Asumiendo que guardaste "admin"
+    const verificarAcceso = async () => {
+      try {
+        // 1. Preguntamos al servidor si la sesión (Cookie) es válida
+        // No enviamos token manual, la cookie viaja sola 🍪
+        await axios.get("/api/auth/check-session");
 
-    if (!token) {
-      toast.error("Debes iniciar sesión.");
-      router.push("/login"); // Usamos la ruta corta que creamos en el rewrite
-      return;
-    }
+        // 2. Si la sesión es válida (200 OK), verificamos el rol
+        // El rol sí lo mantenemos en localStorage para decisiones de UI rápidas
+        const rolStorage = localStorage.getItem("rol");
+        const rol = rolStorage ? rolStorage.toLowerCase().trim() : "";
 
-    // 2. Verificar si es Admin
-    if (rol !== "admin") {
-      toast.error("Acceso denegado. Área restringida.");
-      router.push("/usuarios/public/screens/HomePublico"); // Sacarlo al home
-      return;
-    }
+        // Validamos que sea admin
+        if (!rol.includes("admin")) {
+            toast.error("Acceso denegado. Área restringida.");
+            router.push("/usuarios/public/screens/HomePublico"); 
+            return;
+        }
 
-    // 3. Si pasa, mostramos el contenido
-    setAutorizado(true);
+        // 3. Si pasa ambas pruebas, autorizamos
+        setAutorizado(true);
+
+      } catch (error) {
+        // Si el servidor devuelve error (401), la sesión no es válida (o no hay cookie)
+        // toast.error("Debes iniciar sesión."); // Opcional, a veces es mejor ser silencioso
+        router.push("/usuarios/visitante/screens/Login");
+      }
+    };
+
+    verificarAcceso();
   }, [router]);
 
   if (!autorizado) {
-    // Mientras verificamos, mostramos una pantalla de carga o nada
+    // Spinner de carga mientras verifica con el servidor
     return (
-      <div style={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-        <div style={{width: '50px', height: '50px', border: '5px solid #f3f3f3', borderTop: '5px solid #0A3D62', borderRadius: '50%', animation: 'spin 1s linear infinite'}}></div>
+      <div style={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#f8fafc'}}>
+        <div style={{
+            width: '50px', 
+            height: '50px', 
+            border: '4px solid #E2E8F0', 
+            borderTop: '4px solid #0A3D62', 
+            borderRadius: '50%', 
+            animation: 'spin 1s linear infinite'
+        }}></div>
         <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
       </div>
     );

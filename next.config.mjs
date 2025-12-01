@@ -15,7 +15,7 @@ const nextConfig = {
     return [
       {
         // 1. Enmascarar el Dashboard
-        source: '/asd34dfsdu&ad/home', // Lo que escribe el usuario (URL bonita)
+        source: '/admin', // Lo que escribe el usuario (URL bonita)
         destination: '/usuarios/admin/screens/Dashboard', // Dónde está realmente el archivo
       },
       {

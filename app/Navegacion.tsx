@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 
-// COMPONENTES SEGÚN ROLES
+// 👇 ASEGÚRATE QUE ESTAS RUTAS SEAN LAS CORRECTAS EN TU PROYECTO
 import HeaderPublico from "../app/usuarios/public/components/header/HeaderPublico"; 
 import FooterPublico from "../app/usuarios/public/components/footer/FooterPublico";
 
@@ -25,40 +25,34 @@ export default function Navegacion({ children }: { children: React.ReactNode }) 
 
   useEffect(() => {
     const validarSesion = async () => {
-      const token = localStorage.getItem("token");
-      let rol = localStorage.getItem("rol");
-
-      // 1. Si no hay token local, limpiamos y marcamos como público
-      if (!token || token === "undefined" || token === "null") {
-        limpiarSesion();
-        return;
-      }
-
-      // 2. SI HAY TOKEN, PREGUNTAMOS AL SERVIDOR SI ES VÁLIDO (Revocación remota)
       try {
-        await axios.get("/api/auth/check-session", {
-            headers: { Authorization: `Bearer ${token}` }
-        });
+        // 1. Preguntamos al servidor si la sesión es válida (Lee la Cookie HttpOnly)
+        // No necesitamos enviar headers manuales, el navegador envía la cookie solo.
+        await axios.get("/api/auth/check-session");
 
-        // Si el servidor dice OK (200), procedemos a configurar el estado
-        rol = rol?.toLowerCase() ?? "publico";
+        // 2. Si el servidor responde OK (200), leemos el rol local para la UI
+        const rolStorage = localStorage.getItem("rol");
+        
+        // 🛡️ CORRECCIÓN DEL ERROR 'possibly null':
+        // Si rolStorage es null, usamos una cadena vacía "" para que no falle el .includes
+        const rol = rolStorage ? rolStorage.toLowerCase().trim() : "";
 
         if (rol.includes("admin")) {
             setEstado({ logueado: true, rol: "admin" });
-        } else if (rol === "cliente" || rol === "usuario") {
+        } else if (rol.includes("cliente") || rol.includes("usuario")) {
             setEstado({ logueado: true, rol: "cliente" });
         } else {
-            setEstado({ logueado: false, rol: "publico" });
+            // Si hay sesión pero el rol no se reconoce, lo mandamos a público o cliente por defecto
+            setEstado({ logueado: true, rol: "cliente" }); 
         }
 
       } catch (error) {
-        // 3. SI EL SERVIDOR DICE 401 (Token revocado, versión vieja, o expirado)
-        // Forzamos el cierre de sesión inmediato
-        console.warn("Sesión invalidada por el servidor");
+        // 3. Si el servidor responde error (401), la sesión no es válida
+        // console.warn("Sesión inválida o expirada"); // Opcional para depurar
         limpiarSesion();
         
-        // Si estaba en una ruta privada, lo mandamos al login o home
-        if (pathname.includes("/admin") || pathname.includes("/client")) {
+        // Protección de rutas: Si estaba en una zona privada, sacarlo
+        if (pathname?.includes("/admin") || pathname?.includes("/client")) {
             router.push("/usuarios/visitante/screens/Login");
         }
       } finally {
@@ -67,7 +61,8 @@ export default function Navegacion({ children }: { children: React.ReactNode }) 
     };
 
     const limpiarSesion = () => {
-        localStorage.removeItem("token");
+        // Limpiamos datos residuales del localStorage
+        localStorage.removeItem("token"); // Por si quedó algo viejo
         localStorage.removeItem("rol");
         localStorage.removeItem("usuario");
         setEstado({ logueado: false, rol: "publico" });
@@ -76,11 +71,10 @@ export default function Navegacion({ children }: { children: React.ReactNode }) 
 
     validarSesion();
 
-    // Escuchamos cambios en localStorage (por si abres otra pestaña y cierras sesión ahí)
+    // Escuchamos cambios en localStorage para sincronizar pestañas
     window.addEventListener("storage", validarSesion);
     return () => window.removeEventListener("storage", validarSesion);
     
-  // Ejecutamos validación cada vez que cambie la ruta (pathname)
   }, [pathname, router]);
 
   if (cargando) return <div style={{ minHeight: "100vh", background: "white" }}></div>;
@@ -88,7 +82,6 @@ export default function Navegacion({ children }: { children: React.ReactNode }) 
   const obtenerHeader = () => {
     if (!estado.logueado) return <HeaderPublico />;
     if (estado.rol === "admin") return <HeaderAdmin />;
-    // Cliente por defecto si está logueado y no es admin
     return <HeaderClient />;
   };
 

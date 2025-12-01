@@ -78,14 +78,10 @@ export default function LoginPublico() {
 
         const res = await axios.post("/api/auth/login", loginData);
         
-        const { token, usuario } = res.data;
+        const { usuario } = res.data;
         const nombreRol = typeof usuario.rol === 'string' ? usuario.rol : usuario.rol?.nombre;
         const rol = nombreRol?.toLowerCase() ?? "cliente";
 
-        if (!token) throw new Error("Token no recibido");
-        
-        // Login Exitoso
-        localStorage.setItem("token", token);
         localStorage.setItem("rol", rol);
         localStorage.setItem("usuario", JSON.stringify(usuario)); 
         
@@ -93,7 +89,7 @@ export default function LoginPublico() {
 
         setTimeout(() => {
           if (rol.includes("admin")) {
-              router.push("/asd34dfsdu&ad/home");
+              router.push("/admin");
           } else {
               router.push("/usuarios/public/screens/HomePublico");
           }
