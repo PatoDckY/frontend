@@ -1,11 +1,10 @@
-// screens/CatalogoCursos.tsx
 "use client";
 import React, { useState, useMemo } from 'react';
 import { Search, Filter, BookOpen } from 'lucide-react';
 import CursoCard from './cards/CursoCard'; 
 import '../styles/CatalogoCursos.css';
 
-// --- TIPOS DE DATOS (CORREGIDO) ---
+// --- TIPOS DE DATOS ---
 type Curso = {
   id: number;
   titulo: string;
@@ -25,11 +24,33 @@ type Curso = {
   costo: number | 'Gratuito';
   ubicacion?: string;
   categoria: string; 
-  linkDetalle: string; // <--- ¡ESTA PROPIEDAD FALTABA!
+  linkDetalle: string; // 👈 Aquí definimos a dónde lleva el botón
 };
 
 // --- DATOS SIMULADOS ---
 const CURSOS_DATA: Curso[] = [
+  {
+    id: 6,
+    titulo: "Las 5 Inteligencias del Cerebro Infantil: Guía para Padres",
+    descripcion: "Descubre cómo potenciar las inteligencias múltiples de tu hijo. Un viaje fascinante por la neurociencia aplicada a la crianza para desarrollar todo su potencial.",
+    fechaInicio: "05 Dic 2025",
+    fechaFin: "06 Dic 2025",
+    fechaPublicacion: "20 Oct 2025",
+    inscripcionesAbiertas: true,
+    cupoMaximo: 30,
+    cupoInscrito: 5, 
+    instructor: "Dra. Mariana Echeverría (Neuropsicóloga)",
+    horario: "Viernes y Sábado 16:00 - 19:00",
+    modalidad: "Presencial",
+    dirigidoA: "Padres",
+    estado: "Activo",
+    imagenSrc: "/logo.png",
+    costo: 1200,
+    ubicacion: "Auditorio Principal",
+    categoria: "Desarrollo Infantil",
+    // ✅ RUTA FUNCIONAL: Esta te llevará a la pantalla que ya tienes lista
+    linkDetalle: "/usuarios/public/screens/Curso" 
+  },
   {
     id: 1,
     titulo: "Primeros Auxilios Pediátricos: RCP y Atragantamiento",
@@ -49,7 +70,8 @@ const CURSOS_DATA: Curso[] = [
     costo: 800,
     ubicacion: "Auditorio Torre 2",
     categoria: "Salud",
-    linkDetalle: "#"
+    // 📝 EJEMPLO: Así se vería si tuvieras una ruta específica para este curso
+    linkDetalle: "/usuarios/public/screens/DetalleCurso" 
   },
   {
     id: 2,
@@ -69,7 +91,8 @@ const CURSOS_DATA: Curso[] = [
     costo: 450,
     ubicacion: "Ludoteca Clínica",
     categoria: "Psicología",
-    linkDetalle: "#"
+    // 📝 EJEMPLO: Ruta por definir
+    linkDetalle: "#" 
   },
   {
     id: 3,
@@ -245,7 +268,7 @@ export default function CatalogoCursos() {
                 imagenSrc={curso.imagenSrc}
                 costo={curso.costo}
                 ubicacion={curso.ubicacion}
-                linkDetalle={curso.linkDetalle}
+                linkDetalle={curso.linkDetalle} // 👈 Pasamos el link dinámico a la tarjeta
               />
             ))}
           </div>
